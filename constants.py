@@ -1,5 +1,0 @@
-s_label = 'Stomach'
-j_label = 'Jejunum'
-l_label = 'Ileum'
-g_label = 'Blood Glucose'
-i_label = 'Blood Insulin'
