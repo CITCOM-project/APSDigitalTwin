@@ -1,8 +1,9 @@
+import matplotlib.pyplot as plt
+import pandas as pd
 from dataclasses import dataclass
 from model import Model
 from openaps import OpenAPS
-from setup import g_label
-import os
+from setup import s_label, j_label, l_label, g_label, i_label
 
 @dataclass
 class Scenario:
@@ -36,14 +37,16 @@ class Scenario:
 
         # model_control.plot()
 
-        open_aps = OpenAPS()
+        open_aps = OpenAPS("./example_oref0_data/profile.json", "./example_oref0_data/basal_profile.json")
         model_openaps = Model(self.initial_values(), constants)
 
         for intervention in self.interventions:
             model_openaps.add_intervention(intervention[0], intervention[1], intervention[2])
 
         for t in range(1, self.timesteps + 1):
-            os.system("oref0-calculate-iob pumphistory.json profile.json clock.json autosens.json > iob.json")
+            if t % 5 == 1:
+                rate = open_aps.run(model_openaps.history, model_openaps.interventions)
+                model_openaps.add_intervention(t, i_label, rate)
             model_openaps.update(t)
 
         openaps_violations = []
@@ -54,6 +57,13 @@ class Scenario:
             if timestep[g_label] < self.level_low:
                 openaps_violations.append(timestep["step"])
 
-        # model_openaps.plot()
+        fig, (ax1, ax2) = plt.subplots(1,2)
+        control_df = pd.DataFrame(model_control.history)
+        control_df.plot('step', [s_label, j_label, l_label, g_label, i_label], ax=ax1)
+
+        openaps_df = pd.DataFrame(model_openaps.history)
+        openaps_df.plot('step', [s_label, j_label, l_label, g_label, i_label], ax=ax2)
+
+        plt.show()
 
         return len(control_violations) <= len(openaps_violations)
