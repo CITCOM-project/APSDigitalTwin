@@ -32,7 +32,7 @@ class OpenAPS:
             "./openaps_temp/clock.json",
             "./openaps_temp/autosens.json"])
         
-        self.__make_file_and_write_to("./openaps_temp/iob.json")
+        self.__make_file_and_write_to("./openaps_temp/iob.json", iob_output)
 
         shutil.rmtree("./openaps_temp")
 
