@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from model import Model
+from openaps import OpenAPS
 from setup import g_label
 import os
 
@@ -35,13 +36,14 @@ class Scenario:
 
         # model_control.plot()
 
+        open_aps = OpenAPS()
         model_openaps = Model(self.initial_values(), constants)
 
         for intervention in self.interventions:
             model_openaps.add_intervention(intervention[0], intervention[1], intervention[2])
 
         for t in range(1, self.timesteps + 1):
-            # Add an intervention based on openaps here
+            os.system("oref0-calculate-iob pumphistory.json profile.json clock.json autosens.json > iob.json")
             model_openaps.update(t)
 
         openaps_violations = []

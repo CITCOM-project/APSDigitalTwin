@@ -44,22 +44,14 @@ class Model:
         old_i = self.history[t-1][i_label]
 
         new_s = old_s - (old_s * self.kjs)
-        if new_s < 0:
-            new_s = 0
 
         new_j = old_j + (old_s * self.kjs) - (old_j * self.kgj) - (old_j * self.kjl)
-        if new_j < 0:
-            new_j = 0
 
         phi = 0 if t < self.tau else self.history[t - self.tau][j_label]
         new_l = old_l + (phi * self.kjl) - (old_l * self.kgl)
-        if new_l < 0:
-            new_l = 0
 
         g_prod = self.klambda / ((self.klambda / self.gprod0) + (old_g - self.gb))
         new_g = old_g - (self.kxg + self.kxgi * old_i) * old_g + g_prod + self.mu * (self.kgj * old_j + self.kgl * old_l)
-        if new_g < 0:
-            new_g = 0
         
         # g_tilde = old_g + self.fgj * (self.kgj * old_j + self.kgl * old_l)
         # new_i = old_i + self.kxi * self.ib * ((self.beta ** self.gamma + 1) / (self.beta ** self.gamma * (self.gb / g_tilde) ** self.gamma + 1) - old_i / self.ib)
