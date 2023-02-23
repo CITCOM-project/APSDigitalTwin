@@ -128,13 +128,9 @@ class GlucoseInsulinGeneticAlgorithm:
             except:
                 return 0
             
-            stomach_model_df = pd.DataFrame(model.history, dtype=np.float64)[s_label]
-
-            error = 0
-            for i in range(len(self.training_data.cob_data_frame)):
-                diff = stomach_model_df[i] - self.training_data.cob_data_frame[i]
-                diff_sq = diff ** 2
-                error += diff_sq
+            np_stomach_model = np.array(pd.DataFrame(model.history)[s_label])
+            np_stomach_training = np.array(self.training_data.cob_data_frame)
+            error = np.sum(np.square(np_stomach_model - np_stomach_training))
 
             return 1/error
         
@@ -156,20 +152,12 @@ class GlucoseInsulinGeneticAlgorithm:
             except:
                 return 0
             
-            insulin_model_df = pd.DataFrame(model.history, dtype=np.float64)[i_label]
+            np_insulin_model = np.array(pd.DataFrame(model.history)[i_label])
+            np_insulin_training = np.array(self.training_data.iob_data_frame)
 
             spline_factor = 0.01
-            
-            error = 0
-            for i in range(len(self.training_data.iob_data_frame)):
-                diff = insulin_model_df[i] - self.training_data.iob_data_frame[i]
-                diff_sq = diff ** 2
-                error += diff_sq
-
-            for i in range(len(insulin_model_df) - 1):
-                diff = insulin_model_df[i] - insulin_model_df[i + 1]
-                diff_sq = diff ** 2
-                error += diff_sq * spline_factor
+            error = np.sum(np.square(np_insulin_model - np_insulin_training))
+            error += np.sum(np.square(np.diff(np_insulin_model))) * spline_factor
 
             return 1/error
         
@@ -204,20 +192,12 @@ class GlucoseInsulinGeneticAlgorithm:
             except:
                 return 0
 
-            bg_model_df = pd.DataFrame(model.history, dtype=np.float64)[g_label]
+            np_bg_model = np.array(pd.DataFrame(model.history)[g_label])
+            np_bg_training = np.array(self.training_data.iob_data_frame)
 
             spline_factor = 0.01
-
-            error = 0
-            for i in range(len(self.training_data.bg_data_frame)):
-                diff = bg_model_df[i] - self.training_data.bg_data_frame[i]
-                diff_sq = diff ** 2
-                error += diff_sq
-
-            for i in range(len(bg_model_df) - 1):
-                diff = bg_model_df[i] - bg_model_df[i + 1]
-                diff_sq = diff ** 2
-                error += diff_sq * spline_factor
+            error = np.sum(np.square(np_bg_model - np_bg_training))
+            error += np.sum(np.square(np.diff(np_bg_model))) * spline_factor
 
             if math.isinf(error) or math.isnan(error):
                 return 0

@@ -25,15 +25,11 @@ class Model:
         self.tau = constants[7]
         self.klambda = constants[8]
         self.mu = constants[9]
-        # self.beta = constants[10]
-        # self.gamma = constants[11]
 
         self.gprod0 = constants[10]
         self.ib = constants[11]
 
-        self.gb = starting_vals[0]
-
-        # self.fgj = constants[15]
+        self.gb = starting_vals[3]
 
 
     def update(self, t):
@@ -53,8 +49,6 @@ class Model:
         g_prod = self.klambda / ((self.klambda / self.gprod0) + (old_g - self.gb))
         new_g = old_g - (self.kxg + self.kxgi * old_i) * old_g + g_prod + self.mu * (self.kgj * old_j + self.kgl * old_l)
         
-        # g_tilde = old_g + self.fgj * (self.kgj * old_j + self.kgl * old_l)
-        # new_i = old_i + self.kxi * self.ib * ((self.beta ** self.gamma + 1) / (self.beta ** self.gamma * (self.gb / g_tilde) ** self.gamma + 1) - old_i / self.ib)
         new_i = old_i + self.kxi * self.ib * ( - old_i / self.ib)
 
         if t in self.interventions:

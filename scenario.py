@@ -35,8 +35,6 @@ class Scenario:
             if timestep[g_label] < self.level_low:
                 control_violations.append(timestep["step"])
 
-        # model_control.plot()
-
         open_aps = OpenAPS("./example_oref0_data/profile.json", "./example_oref0_data/basal_profile.json")
         model_openaps = Model(self.initial_values(), constants)
 
@@ -45,7 +43,7 @@ class Scenario:
 
         for t in range(1, self.timesteps + 1):
             if t % 5 == 1:
-                rate = open_aps.run(model_openaps.history, model_openaps.interventions)
+                rate = open_aps.run(model_openaps.history)
                 model_openaps.add_intervention(t, i_label, rate)
             model_openaps.update(t)
 
