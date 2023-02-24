@@ -35,7 +35,7 @@ class Scenario:
             if timestep[g_label] < self.level_low:
                 control_violations.append(timestep["step"])
 
-        open_aps = OpenAPS("./example_oref0_data/profile.json", "./example_oref0_data/basal_profile.json")
+        open_aps = OpenAPS("./data/example_oref0_data/profile.json", "./data/example_oref0_data/basal_profile.json")
         model_openaps = Model(self.initial_values(), constants)
 
         for intervention in self.interventions:
