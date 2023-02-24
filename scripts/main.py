@@ -4,12 +4,12 @@ from scenario import Scenario
 
 if __name__ == "__main__":
 
-    # training_data = TrainingData("./data.csv")
+    training_data = TrainingData("./data/data.csv")
 
-    # ga = GlucoseInsulinGeneticAlgorithm()
-    # constants = ga.run(training_data)
+    ga = GlucoseInsulinGeneticAlgorithm()
+    constants = ga.run(training_data)
 
-    constants = [0.006237490718434935, 0.0016178369029404838, 0.4591610516833179, 0.5753904673542842, 0.00035958241954792136, 0.0011730992937690754, 0.019451673788506763, 38, 0.6035644640425673, 0.9802986866743725, 0.0022734639570410886, 0.8963363254601819]
+    # constants = [0.006237490718434935, 0.0016178369029404838, 0.4591610516833179, 0.5753904673542842, 0.00035958241954792136, 0.0011730992937690754, 0.019451673788506763, 38, 0.6035644640425673, 0.9802986866743725, 0.0022734639570410886, 0.8963363254601819]
 
     s1 = Scenario(30, 70, 50, 120, 180, 40, []) # Low Crashing
     s2 = Scenario(50, 70, 0, 120, 180, 40, []) # Low Stable
