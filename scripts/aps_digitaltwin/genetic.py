@@ -3,7 +3,7 @@ import math
 import pandas as pd
 import numpy as np
 from model import Model
-from setup import s_label, g_label, i_label
+from util import s_label, g_label, i_label
 
 class GlucoseInsulinGeneticAlgorithm:
 

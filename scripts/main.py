@@ -1,6 +1,6 @@
-from genetic import GlucoseInsulinGeneticAlgorithm
-from util import TrainingData
-from scenario import Scenario
+from aps_digitaltwin.genetic import GlucoseInsulinGeneticAlgorithm
+from aps_digitaltwin.util import TrainingData
+from aps_digitaltwin.scenario import Scenario
 
 if __name__ == "__main__":
 
