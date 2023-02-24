@@ -3,7 +3,7 @@ import pandas as pd
 from dataclasses import dataclass
 from model import Model
 from openaps import OpenAPS
-from setup import s_label, j_label, l_label, g_label, i_label
+from util import s_label, j_label, l_label, g_label, i_label
 
 @dataclass
 class Scenario:
@@ -18,7 +18,7 @@ class Scenario:
     def initial_values(self):
         return [self.initial_carbs, 0, 0, self.initial_bg, self.initial_iob]
     
-    def run(self, constants: list):
+    def run(self, constants: list, profile_path, basal_profile_path):
         model_control = Model(self.initial_values(), constants)
 
         for intervention in self.interventions:
@@ -35,7 +35,7 @@ class Scenario:
             if timestep[g_label] < self.level_low:
                 control_violations.append(timestep["step"])
 
-        open_aps = OpenAPS("./data/example_oref0_data/profile.json", "./data/example_oref0_data/basal_profile.json")
+        open_aps = OpenAPS(profile_path, basal_profile_path)
         model_openaps = Model(self.initial_values(), constants)
 
         for intervention in self.interventions:

@@ -1,8 +1,11 @@
 from genetic import GlucoseInsulinGeneticAlgorithm
-from setup import TrainingData
+from util import TrainingData
 from scenario import Scenario
 
 if __name__ == "__main__":
+
+    profile = "./data/example_oref0_data/profile.json"
+    basal_profile = "./data/example_oref0_data/basal_profile.json"
 
     training_data = TrainingData("./data/data.csv")
 
@@ -23,12 +26,12 @@ if __name__ == "__main__":
     s8 = Scenario(50, 130, 0, 120, 180, 40, []) # High Stable
     s9 = Scenario(200, 130, 0, 120, 180, 40, []) # High Rising
 
-    print(s1.run(constants))
-    print(s2.run(constants))
-    print(s3.run(constants))
-    print(s4.run(constants))
-    print(s5.run(constants))
-    print(s6.run(constants))
-    print(s7.run(constants))
-    print(s8.run(constants))
-    print(s9.run(constants))
+    print(s1.run(constants, profile, basal_profile))
+    print(s2.run(constants, profile, basal_profile))
+    print(s3.run(constants, profile, basal_profile))
+    print(s4.run(constants, profile, basal_profile))
+    print(s5.run(constants, profile, basal_profile))
+    print(s6.run(constants, profile, basal_profile))
+    print(s7.run(constants, profile, basal_profile))
+    print(s8.run(constants, profile, basal_profile))
+    print(s9.run(constants, profile, basal_profile))
