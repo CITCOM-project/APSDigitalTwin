@@ -2,8 +2,8 @@ import pygad
 import math
 import pandas as pd
 import numpy as np
-from model import Model
-from util import s_label, g_label, i_label
+from aps_digitaltwin.model import Model
+from aps_digitaltwin.util import s_label, g_label, i_label
 
 class GlucoseInsulinGeneticAlgorithm:
 

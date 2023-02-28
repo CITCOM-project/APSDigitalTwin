@@ -1,6 +1,9 @@
 from aps_digitaltwin.genetic import GlucoseInsulinGeneticAlgorithm
+from aps_digitaltwin.swarm import GlucoseInsulinParticleSwarm
 from aps_digitaltwin.util import TrainingData
 from aps_digitaltwin.scenario import Scenario
+
+from aps_digitaltwin.model import Model
 
 if __name__ == "__main__":
 
@@ -12,7 +15,7 @@ if __name__ == "__main__":
     ga = GlucoseInsulinGeneticAlgorithm()
     constants = ga.run(training_data)
 
-    # constants = [0.006237490718434935, 0.0016178369029404838, 0.4591610516833179, 0.5753904673542842, 0.00035958241954792136, 0.0011730992937690754, 0.019451673788506763, 38, 0.6035644640425673, 0.9802986866743725, 0.0022734639570410886, 0.8963363254601819]
+    # constants = [0.006087855309129808, 0.8169421695707391, 0.2341139159982908, 0.7514639148751912, 0.003159062595706197, 0.00033439542508328923, 0.026713764597784406, 124, 0.21414131324524588, 0.993974927000483, 0.007151843859299123, 0.7580049521993947]
 
     s1 = Scenario(30, 70, 50, 120, 180, 40, []) # Low Crashing
     s2 = Scenario(50, 70, 0, 120, 180, 40, []) # Low Stable

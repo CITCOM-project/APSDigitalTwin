@@ -3,7 +3,7 @@ import subprocess
 import shutil
 import json
 from datetime import datetime
-from util import g_label, s_label, i_label
+from aps_digitaltwin.util import g_label, s_label, i_label
 
 class OpenAPS:
 

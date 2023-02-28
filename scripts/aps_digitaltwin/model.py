@@ -1,4 +1,4 @@
-from setup import s_label, j_label, l_label, g_label, i_label
+from aps_digitaltwin.util import s_label, j_label, l_label, g_label, i_label
 import pandas as pd
 import matplotlib.pyplot as plt
 

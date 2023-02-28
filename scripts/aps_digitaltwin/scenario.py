@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from dataclasses import dataclass
-from model import Model
-from openaps import OpenAPS
-from util import s_label, j_label, l_label, g_label, i_label
+from aps_digitaltwin.model import Model
+from aps_digitaltwin.openaps import OpenAPS
+from aps_digitaltwin.util import s_label, j_label, l_label, g_label, i_label
 
 @dataclass
 class Scenario:
