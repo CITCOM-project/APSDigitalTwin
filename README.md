@@ -14,12 +14,12 @@ pip install -r requirements.txt
 ```
 ## Data Preparation
 
-This model requires carbohydrate (g), blood glucose (mmol/L) and insulin (U) timeseries at 5 minute intervals to learn the model. This data should be presented in a csv with the following layout:
+This model requires a blood glucose (mmol/L), insulin on board (U), carbohydrates on board (g) and pump output rate (U/h) timeseries at 5 minute intervals to learn the model. This data should be presented in a csv with the following layout:
 
-| bg | iob | cob |
-| --- | --- | --- |
-| 103 | 0.34 | 5.2 |
-| 104 | 0.32 | 5.1 |
+| bg | iob | cob | rate |
+| --- | --- | --- | --- |
+| 103 | 0.34 | 5.2 | 1.4 |
+| 104 | 0.32 | 5.1 | 0 |
 
 
 ## Model Execution

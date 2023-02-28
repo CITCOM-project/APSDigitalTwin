@@ -1,9 +1,6 @@
 from aps_digitaltwin.genetic import GlucoseInsulinGeneticAlgorithm
-from aps_digitaltwin.swarm import GlucoseInsulinParticleSwarm
 from aps_digitaltwin.util import TrainingData
 from aps_digitaltwin.scenario import Scenario
-
-from aps_digitaltwin.model import Model
 
 if __name__ == "__main__":
 
