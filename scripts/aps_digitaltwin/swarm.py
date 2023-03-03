@@ -8,7 +8,6 @@ class GlucoseInsulinParticleSwarm:
     def __init__(self) -> None:
         self.__kjs = 0
         self.__kxi = 0
-        self.__ib = 0
 
         self.training_data = None
 
@@ -20,17 +19,16 @@ class GlucoseInsulinParticleSwarm:
         cost, pos = optimiser.optimize(fitness_function_stomach, iters=100, training_data=training_data)
         self.__kjs = pos[0]
 
-        optimiser2 = ps.single.GlobalBestPSO(n_particles=20, dimensions=2, options=options, bounds=([0,0],[1,1]))
+        optimiser2 = ps.single.GlobalBestPSO(n_particles=20, dimensions=1, options=options, bounds=([0],[1]))
         cost, pos2 = optimiser2.optimize(fitness_function_insulin, iters=100, training_data=training_data, kjs=self.__kjs)
         self.__kxi = pos2[0]
-        self.__ib = pos2[1]
 
         bounds = ([0,0,0,0,0,1,0,0,0],
                   [1,1,1,1,1,self.training_data.timesteps * 5, 1,1,1])
 
         optimiser3 = ps.single.GlobalBestPSO(n_particles=300, dimensions=9, options=options, bounds=bounds)
         cost, pos3 = optimiser3.optimize(fitness_function_glucose, iters=100, training_data=training_data,
-                                         kjs=self.__kjs, kxi=self.__kxi, ib=self.__ib)
+                                         kjs=self.__kjs, kxi=self.__kxi)
         
         best_constants = [
             pos[0],
@@ -43,8 +41,7 @@ class GlucoseInsulinParticleSwarm:
             round(pos3[5]),
             pos3[6],
             pos3[7],
-            pos3[8],
-            pos2[1]
+            pos3[8]
         ]
 
         return best_constants

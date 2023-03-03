@@ -32,7 +32,7 @@ def fitness_function_stomach(solutions, training_data):
 def fitness_function_insulin(solutions, training_data, kjs):
     costs = []
     for solution in solutions:
-        constants = [kjs,0.1,0.1,0.1,0.1,0.1,solution[0],5,0.1,0.1,0.1,solution[1]]
+        constants = [kjs,0.1,0.1,0.1,0.1,0.1,solution[0],5,0.1,0.1,0.1]
 
         model = Model(training_data.find_initial_values(), constants)
 
@@ -57,7 +57,7 @@ def fitness_function_insulin(solutions, training_data, kjs):
 
     return costs
 
-def fitness_function_glucose(solutions, training_data, kjs, kxi, ib):
+def fitness_function_glucose(solutions, training_data, kjs, kxi):
     costs = []
     for solution in solutions:
         constants = [
@@ -71,8 +71,7 @@ def fitness_function_glucose(solutions, training_data, kjs, kxi, ib):
             round(solution[5]),
             solution[6],
             solution[7],
-            solution[8],
-            ib
+            solution[8]
         ]
 
         model = Model(training_data.find_initial_values(), constants)

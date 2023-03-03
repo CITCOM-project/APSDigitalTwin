@@ -27,7 +27,6 @@ class Model:
         self.mu = constants[9]
 
         self.gprod0 = constants[10]
-        self.ib = constants[11]
 
         self.gb = starting_vals[3]
 
@@ -49,7 +48,7 @@ class Model:
         g_prod = self.klambda / ((self.klambda / self.gprod0) + (old_g - self.gb))
         new_g = old_g - (self.kxg + self.kxgi * old_i) * old_g + g_prod + self.mu * (self.kgj * old_j + self.kgl * old_l)
         
-        new_i = old_i + self.kxi * self.ib * ( - old_i / self.ib)
+        new_i = old_i - (old_i  * self.kxi)
 
         if t in self.interventions:
             for intervention in self.interventions[t]:
