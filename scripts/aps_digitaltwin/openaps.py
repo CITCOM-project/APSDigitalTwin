@@ -8,7 +8,7 @@ from aps_digitaltwin.util import g_label, s_label, i_label
 class OpenAPS:
 
     def __init__(self, profile_path, basal_profile_path, autosense_ratio = 1.0, test_timestamp = "2023-01-01T18:00:00-00:00") -> None:
-        oref_help = subprocess.check_output(["oref0","--help"])
+        oref_help = subprocess.check_output(["oref0","--help"], executable='/bin/bash')
 
         if "oref0 help - this message" not in str(oref_help):
             print("ERROR - oref0 not installed")
@@ -78,7 +78,7 @@ class OpenAPS:
             self.profile_path,
             "./openaps_temp/clock.json",
             "./openaps_temp/autosens.json"
-        ]).decode("utf-8")
+        ], executable='/bin/bash').decode("utf-8")
         self.__make_file_and_write_to("./openaps_temp/iob.json", iob_output)
 
         meal_output = subprocess.check_output([
@@ -89,7 +89,7 @@ class OpenAPS:
             "./openaps_temp/glucose.json",
             self.basal_profile_path,
             "./openaps_temp/carbhistory.json"
-        ]).decode("utf-8")
+        ], executable='/bin/bash').decode("utf-8")
         self.__make_file_and_write_to("./openaps_temp/meal.json", meal_output)
 
         suggested_output = subprocess.check_output([
@@ -105,7 +105,7 @@ class OpenAPS:
             "--microbolus",
             "--currentTime",
             str(current_epoch)
-        ]).decode("utf-8")
+        ], executable='/bin/bash').decode("utf-8")
         self.__make_file_and_write_to("./openaps_temp/suggested.json", suggested_output)
 
         json_output = open("./openaps_temp/suggested.json")
