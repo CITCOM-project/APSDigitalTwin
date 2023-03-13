@@ -18,7 +18,7 @@ class Scenario:
     def initial_values(self):
         return [self.initial_carbs, 0, 0, self.initial_bg, self.initial_iob]
     
-    def run(self, constants: list, profile_path, basal_profile_path, recorded_carbs = None, output_file = None):
+    def run(self, constants: list, recorded_carbs = None, output_file = None):
         model_control = Model(self.initial_values(), constants)
 
         for intervention in self.interventions:
@@ -35,8 +35,7 @@ class Scenario:
             if timestep[g_label] < self.level_low:
                 control_violations.append(timestep["step"])
 
-        open_aps = OpenAPS(profile_path, basal_profile_path, recorded_carbs)
-        pump_output = 0
+        open_aps = OpenAPS(recorded_carbs)
         model_openaps = Model(self.initial_values(), constants)
 
         for intervention in self.interventions:

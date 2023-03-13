@@ -4,10 +4,11 @@ from aps_digitaltwin.scenario import Scenario
 from aps_digitaltwin.model import Model
 import numpy as np
 
+from dotenv import load_dotenv
+
 if __name__ == "__main__":
 
-    profile = "./data/example_oref0_data/profile.json"
-    basal_profile = "./data/example_oref0_data/basal_profile.json"
+    load_dotenv()
 
     training_data = TrainingData("./data/data.csv")
 
@@ -28,15 +29,15 @@ if __name__ == "__main__":
     s8 = Scenario(50, 130, 0, 120, 180, 40, []) # High Stable
     s9 = Scenario(200, 130, 0, 120, 180, 40, []) # High Rising
 
-    print(s1.run(constants, profile, basal_profile))
-    print(s2.run(constants, profile, basal_profile))
-    print(s3.run(constants, profile, basal_profile))
-    print(s4.run(constants, profile, basal_profile))
-    print(s5.run(constants, profile, basal_profile))
-    print(s6.run(constants, profile, basal_profile))
-    print(s7.run(constants, profile, basal_profile))
-    print(s8.run(constants, profile, basal_profile))
-    print(s9.run(constants, profile, basal_profile))
+    print(s1.run(constants))
+    print(s2.run(constants))
+    print(s3.run(constants))
+    print(s4.run(constants))
+    print(s5.run(constants))
+    print(s6.run(constants))
+    print(s7.run(constants))
+    print(s8.run(constants))
+    print(s9.run(constants))
 
     # for x in range(400):
     #     carbs = 70 + np.random.normal() * 50

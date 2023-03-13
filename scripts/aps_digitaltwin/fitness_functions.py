@@ -7,7 +7,7 @@ from aps_digitaltwin.util import s_label, i_label, g_label
 def fitness_function_stomach(solutions, training_data):
     costs = []
     for solution in solutions:
-        constants = [solution[0],0.1,0.1,0.1,0.1,0.1,0.1,5,0.1,0.1,0.1,0.1]
+        constants = [solution[0],0.1,0.1,0.1,0.1,0.1,0.1,5,0.1,0.1,0.1,0.1,0.1]
 
         model = Model(training_data.find_initial_values(), constants)
 
@@ -32,7 +32,7 @@ def fitness_function_stomach(solutions, training_data):
 def fitness_function_insulin(solutions, training_data, kjs):
     costs = []
     for solution in solutions:
-        constants = [kjs,0.1,0.1,0.1,0.1,0.1,solution[0],5,0.1,0.1,0.1]
+        constants = [kjs,0.1,0.1,0.1,0.1,0.1,solution[0],5,0.1,0.1,0.1,0.1]
 
         model = Model(training_data.find_initial_values(), constants)
 
@@ -71,7 +71,8 @@ def fitness_function_glucose(solutions, training_data, kjs, kxi):
             round(solution[5]),
             solution[6],
             solution[7],
-            solution[8]
+            solution[8],
+            solution[9]
         ]
 
         model = Model(training_data.find_initial_values(), constants)
