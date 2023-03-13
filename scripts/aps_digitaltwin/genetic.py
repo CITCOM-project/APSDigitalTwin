@@ -39,7 +39,7 @@ class GlucoseInsulinGeneticAlgorithm:
                        sol_per_pop=10,
                        num_genes=1,
                        mutation_type="random",
-                       mutation_percent_genes=80,
+                       mutation_percent_genes=100,
                        gene_space=[
                         {"low": 0, "high": 1}
                        ],
@@ -60,7 +60,7 @@ class GlucoseInsulinGeneticAlgorithm:
                        sol_per_pop=20,
                        num_genes=9,
                        mutation_type="random",
-                       mutation_percent_genes=20,
+                       mutation_percent_genes=30,
                        gene_space=[
                         {"low": 0, "high": 1},
                         {"low": 0, "high": 1},
@@ -104,6 +104,19 @@ class GlucoseInsulinGeneticAlgorithm:
         ]
 
         print(f"Best constants = [{', '.join(map(str, best_constants))}]")
+
+        model = Model(self.training_data.find_initial_values(), best_constants)
+
+        for intervention in self.training_data.interventions:
+            model.add_intervention(intervention[0], intervention[1], intervention[2])
+
+        try:
+            for i in range(1, (self.training_data.timesteps - 1) * 5 + 1):
+                model.update(i)
+        except:
+            raise Exception("Model learning failed")
+        
+        model.plot()
 
         return best_constants
 
@@ -189,7 +202,7 @@ class GlucoseInsulinGeneticAlgorithm:
             np_bg_model = np.array(pd.DataFrame(model.history)[g_label])
             np_bg_training = np.array(self.training_data.iob_data_frame)
 
-            spline_factor = 0.01
+            spline_factor = 0.1
             error = np.sum(np.square(np_bg_model - np_bg_training))
             error += np.sum(np.square(np.diff(np_bg_model))) * spline_factor
 

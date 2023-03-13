@@ -7,7 +7,7 @@ from aps_digitaltwin.util import g_label, s_label, i_label
 
 class OpenAPS:
 
-    def __init__(self, profile_path, basal_profile_path, autosense_ratio = 1.0, test_timestamp = "2023-01-01T18:00:00-00:00") -> None:
+    def __init__(self, profile_path, basal_profile_path, recorded_carbs, autosense_ratio = 1.0, test_timestamp = "2023-01-01T18:00:00-00:00") -> None:
         oref_help = subprocess.check_output(["oref0","--help"])
 
         if "oref0 help - this message" not in str(oref_help):
@@ -20,6 +20,7 @@ class OpenAPS:
         self.test_timestamp = test_timestamp
         self.epoch_time = int(datetime.strptime(test_timestamp, "%Y-%m-%dT%H:%M:%S%z").timestamp() * 1000)
         self.pump_history = []
+        self.recorded_carbs = recorded_carbs
 
     def run(self, model_history):
         if not os.path.exists('./openaps_temp'):
@@ -54,7 +55,10 @@ class OpenAPS:
                 
             if idx == 0:
                 if time_step[s_label] > 0:
-                    carb_history.append(f'{{"enteredBy":"fakecarbs","carbs":{time_step[s_label]},"created_at":"{self.test_timestamp}","insulin": null}}')
+                    if self.recorded_carbs == None:
+                        carb_history.append(f'{{"enteredBy":"fakecarbs","carbs":{time_step[s_label]},"created_at":"{self.test_timestamp}","insulin": null}}')
+                    else:
+                        carb_history.append(f'{{"enteredBy":"fakecarbs","carbs":{self.recorded_carbs},"created_at":"{self.test_timestamp}","insulin": null}}')
 
             else:
                 carb_diff = time_step[s_label] - model_history[idx - 1][s_label]

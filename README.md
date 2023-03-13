@@ -2,7 +2,7 @@
 
 APSDigitalTwin (Artificial Pancreas System Digital Twin) uses a predictive model to simulate a person with diabetes with the intervention of OpenAPS's oref0 algorithm. The system learns a model of the user from past obervational data and allows for this model to be run against different scenarios both with and without OpenAPS intervention.
 
-This project was executed with python version 3.9.7 on the operating system Ubuntu 20.04.5 LTS.
+This project was executed with oref0 version 0.7.1, python version 3.9.7 on the operating system Ubuntu 20.04.5 LTS.
 
 ## Installation
 
