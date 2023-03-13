@@ -54,10 +54,10 @@ class GlucoseInsulinGeneticAlgorithm:
 
         self.__kxi = insulin_solution[0]
 
-        ga_instance = pygad.GA(num_generations=1000,
-                       num_parents_mating=5,
+        ga_instance = pygad.GA(num_generations=1500,
+                       num_parents_mating=8,
                        fitness_func=self.wrapped_fitness_function_glucose(),
-                       sol_per_pop=20,
+                       sol_per_pop=30,
                        num_genes=10,
                        mutation_type="random",
                        mutation_percent_genes=30,
