@@ -37,6 +37,7 @@ class Scenario:
 
         open_aps = OpenAPS(recorded_carbs)
         model_openaps = Model(self.initial_values(), constants)
+        pump_output = 0
 
         for intervention in self.interventions:
             model_openaps.add_intervention(intervention[0], intervention[1], intervention[2])

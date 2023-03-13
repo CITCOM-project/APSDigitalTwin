@@ -31,7 +31,7 @@ class TrainingData:
 
         rates_dataframe = data_frame["rate"]
         for i, rate in rates_dataframe.iteritems():
-            interventions.append((i * 5, i_label, rate))
+            interventions.append((i * 5, i_label, 1000 * rate / 60.0))
 
         for i in range(len(self.cob_data_frame) - 1):
             diff = self.cob_data_frame[i + 1] - self.cob_data_frame[i]
