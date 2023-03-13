@@ -62,9 +62,9 @@ class Scenario:
                 hypo_violations.append(timestep["step"])
 
         fig, (ax1, ax2) = plt.subplots(1,2)
-        ax1.set_title("Control")
+        ax1.set_title("No Intervention")
         ax1.hlines(y=[self.level_high, self.level_low], xmin=0, xmax=self.timesteps, colors='r', linestyles='--', lw=1)
-        ax1.set_title("OpenAPS Intervention")
+        ax2.set_title("OpenAPS Intervention")
         ax2.hlines(y=[self.level_high, self.level_low], xmin=0, xmax=self.timesteps, colors='r', linestyles='--', lw=1)
 
         control_df = pd.DataFrame(model_control.history)

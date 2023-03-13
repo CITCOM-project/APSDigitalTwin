@@ -26,7 +26,11 @@ This model requires a blood glucose (mmol/L), insulin on board (U), carbohydrate
 
 ## Model Execution
 
-In `scripts/main.py`, modify `training_data` with a path your own training dataset and update `profile` and `basal_profile` with paths to the appropriate json files. You may also update any scenarios as required. To then run the code:
+In `scripts/main.py`, modify `training_data` with a path your own training dataset. You should also update `.env` with the correct path for `profile_path` and `basal_profile_path`.
+
+For windows users, `COMSPEC` should also be updated to point to the exe of the bash command line which has oref0 installed (eg: `GitBash.exe`).
+
+You may also update any scenarios as required. To then run the code:
 ```
 python ./scripts/main.py
 ```
