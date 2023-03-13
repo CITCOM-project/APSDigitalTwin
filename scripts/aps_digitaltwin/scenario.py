@@ -59,23 +59,21 @@ class Scenario:
                 hyper_violations.append(timestep["step"])
 
             if timestep[g_label] < self.level_low:
-                hypo_violations.append(timestep["step"])
-
-        fig, (ax1, ax2) = plt.subplots(1,2)
-        ax1.set_title("No Intervention")
-        ax1.hlines(y=[self.level_high, self.level_low], xmin=0, xmax=self.timesteps, colors='r', linestyles='--', lw=1)
-        ax2.set_title("OpenAPS Intervention")
-        ax2.hlines(y=[self.level_high, self.level_low], xmin=0, xmax=self.timesteps, colors='r', linestyles='--', lw=1)
-
-        control_df = pd.DataFrame(model_control.history)
-        control_df.plot('step', [s_label, j_label, l_label, g_label, i_label], ax=ax1)
-
-        openaps_df = pd.DataFrame(model_openaps.history)
-        openaps_df.plot('step', [s_label, j_label, l_label, g_label, i_label], ax=ax2)
-
-        
+                hypo_violations.append(timestep["step"])        
 
         if output_file == None or recorded_carbs == None:
+            fig, (ax1, ax2) = plt.subplots(1,2)
+            ax1.set_title("No Intervention")
+            ax1.hlines(y=[self.level_high, self.level_low], xmin=0, xmax=self.timesteps, colors='r', linestyles='--', lw=1)
+            ax2.set_title("OpenAPS Intervention")
+            ax2.hlines(y=[self.level_high, self.level_low], xmin=0, xmax=self.timesteps, colors='r', linestyles='--', lw=1)
+
+            control_df = pd.DataFrame(model_control.history)
+            control_df.plot('step', [s_label, j_label, l_label, g_label, i_label], ax=ax1)
+
+            openaps_df = pd.DataFrame(model_openaps.history)
+            openaps_df.plot('step', [s_label, j_label, l_label, g_label, i_label], ax=ax2)
+            
             plt.show()
         else:
             output = open(output_file, "a")
