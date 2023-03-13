@@ -23,8 +23,8 @@ class GlucoseInsulinParticleSwarm:
         cost, pos2 = optimiser2.optimize(fitness_function_insulin, iters=100, training_data=training_data, kjs=self.__kjs)
         self.__kxi = pos2[0]
 
-        bounds = ([0,0,0,0,0,1,0,0,0],
-                  [1,1,1,1,1,self.training_data.timesteps * 5, 1,1,1])
+        bounds = ([0,0,0,0,0,1,0,0,0,0],
+                  [1,1,1,1,1,self.training_data.timesteps * 5, 1,1,1,10])
 
         optimiser3 = ps.single.GlobalBestPSO(n_particles=300, dimensions=10, options=options, bounds=bounds)
         cost, pos3 = optimiser3.optimize(fitness_function_glucose, iters=100, training_data=training_data,
