@@ -58,7 +58,7 @@ class GlucoseInsulinGeneticAlgorithm:
                        num_parents_mating=5,
                        fitness_func=self.wrapped_fitness_function_glucose(),
                        sol_per_pop=20,
-                       num_genes=9,
+                       num_genes=10,
                        mutation_type="random",
                        mutation_percent_genes=20,
                        gene_space=[
@@ -70,7 +70,8 @@ class GlucoseInsulinGeneticAlgorithm:
                         {"low": 1, "high": self.training_data.timesteps * 5},
                         {"low": 0, "high": 1},
                         {"low": 0, "high": 1},
-                        {"low": 0, "high": 1}
+                        {"low": 0, "high": 1},
+                        {"low": 0, "high": 10}
                        ],
                        gene_type=[
                         np.float64,
@@ -79,6 +80,7 @@ class GlucoseInsulinGeneticAlgorithm:
                         np.float64,
                         np.float64,
                         int,
+                        np.float64,
                         np.float64,
                         np.float64,
                         np.float64
@@ -100,7 +102,8 @@ class GlucoseInsulinGeneticAlgorithm:
             final_solution[5],
             final_solution[6],
             final_solution[7],
-            final_solution[8]
+            final_solution[8],
+            final_solution[9]
         ]
 
         print(f"Best constants = [{', '.join(map(str, best_constants))}]")
@@ -110,7 +113,7 @@ class GlucoseInsulinGeneticAlgorithm:
     def wrapped_fitness_function_stomach(self):
 
         def fitness_function_stomach(solution, solution_idx):
-            constants = [solution[0],0.1,0.1,0.1,0.1,0.1,0.1,5,0.1,0.1,0.1]
+            constants = [solution[0],0.1,0.1,0.1,0.1,0.1,0.1,5,0.1,0.1,0.1,0.1]
 
             model = Model(self.training_data.find_initial_values(), constants)
 
@@ -134,7 +137,7 @@ class GlucoseInsulinGeneticAlgorithm:
     def wrapped_fitness_function_insulin(self):
 
         def fitness_function_insulin(solution, solution_idx):
-            constants = [self.__kjs,0.1,0.1,0.1,0.1,0.1,solution[0],5,0.1,0.1,0.1]
+            constants = [self.__kjs,0.1,0.1,0.1,0.1,0.1,solution[0],5,0.1,0.1,0.1,0.1]
 
             model = Model(self.training_data.find_initial_values(), constants)
 
@@ -172,7 +175,8 @@ class GlucoseInsulinGeneticAlgorithm:
                 solution[5],
                 solution[6],
                 solution[7],
-                solution[8]
+                solution[8],
+                solution[9]
             ]
 
             model = Model(self.training_data.find_initial_values(), constants)
