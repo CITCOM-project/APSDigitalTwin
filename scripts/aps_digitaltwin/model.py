@@ -24,10 +24,10 @@ class Model:
 
         self.tau = constants[7]
         self.klambda = constants[8]
-        self.mu = constants[9]
+        self.eta = constants[9]
 
         self.gprod0 = constants[10]
-        self.kphi = constants[11]
+        self.kmu = constants[11]
         self.gb = starting_vals[3]
 
         self.gprod_limit = (self.klambda * self.gb + self.gprod0 * (self.kphi + self.gb)) / (self.klambda + self.gprod0)
@@ -48,8 +48,8 @@ class Model:
         new_l = old_l + (phi * self.kjl) - (old_l * self.kgl)
 
         # g_prod = self.klambda / ((self.klambda / self.gprod0) + (old_g - self.gb))
-        g_prod = (self.klambda * (self.gb - old_g))/(self.kphi + (self.gb - old_g)) + self.gprod0 if old_g <= self.gprod_limit else 0
-        new_g = old_g - (self.kxg + self.kxgi * old_i) * old_g + g_prod + self.mu * (self.kgj * old_j + self.kgl * old_l)
+        g_prod = (self.klambda * (self.gb - old_g))/(self.kmu + (self.gb - old_g)) + self.gprod0 if old_g <= self.gprod_limit else 0
+        new_g = old_g - (self.kxg + self.kxgi * old_i) * old_g + g_prod + self.eta * (self.kgj * old_j + self.kgl * old_l)
         
         new_i = old_i - (old_i  * self.kxi)
 
