@@ -46,7 +46,8 @@ class Scenario:
             if t % 5 == 1:
                 rate = open_aps.run(model_openaps.history)
                 pump_output += rate
-                model_openaps.add_intervention(t, i_label, rate)
+                for j in range(5):
+                    model_openaps.add_intervention(t + j, i_label, rate / 5.0)
             model_openaps.update(t)
 
         hyper_violations = []

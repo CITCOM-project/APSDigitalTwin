@@ -5,9 +5,10 @@ from aps_digitaltwin.fitness_functions import fitness_function_stomach, fitness_
 
 class GlucoseInsulinParticleSwarm:
 
-    def __init__(self) -> None:
+    def __init__(self, swarm = True) -> None:
         self.__kjs = 0
         self.__kxi = 0
+        self.swarm = swarm
 
         self.training_data = None
 
@@ -15,18 +16,18 @@ class GlucoseInsulinParticleSwarm:
         self.training_data = training_data
 
         options = {'c1': 0.5, 'c2': 0.5, 'w':0.8}
-        optimiser = ps.single.GlobalBestPSO(n_particles=10, dimensions=1, options=options, bounds=([0],[1]))
+        optimiser = ps.single.GlobalBestPSO(n_particles=10 if self.swarm else 1, dimensions=1, options=options, bounds=([0],[1]))
         cost, pos = optimiser.optimize(fitness_function_stomach, iters=100, training_data=training_data)
         self.__kjs = pos[0]
 
-        optimiser2 = ps.single.GlobalBestPSO(n_particles=20, dimensions=1, options=options, bounds=([0],[1]))
+        optimiser2 = ps.single.GlobalBestPSO(n_particles=20 if self.swarm else 1, dimensions=1, options=options, bounds=([0],[1]))
         cost, pos2 = optimiser2.optimize(fitness_function_insulin, iters=100, training_data=training_data, kjs=self.__kjs)
         self.__kxi = pos2[0]
 
         bounds = ([0,0,0,0,0,1,0,0,0,0],
                   [1,1,1,1,1,self.training_data.timesteps * 5, 1,1,1,10])
 
-        optimiser3 = ps.single.GlobalBestPSO(n_particles=300, dimensions=10, options=options, bounds=bounds)
+        optimiser3 = ps.single.GlobalBestPSO(n_particles=100 if self.swarm else 1, dimensions=10, options=options, bounds=bounds)
         cost, pos3 = optimiser3.optimize(fitness_function_glucose, iters=100, training_data=training_data,
                                          kjs=self.__kjs, kxi=self.__kxi)
         
@@ -45,7 +46,7 @@ class GlucoseInsulinParticleSwarm:
             pos3[9]
         ]
 
-        return best_constants
+        return best_constants, 1/cost
     
     
 if __name__ == "__main__":

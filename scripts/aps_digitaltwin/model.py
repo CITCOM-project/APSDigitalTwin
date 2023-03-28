@@ -30,7 +30,7 @@ class Model:
         self.kmu = constants[11]
         self.gb = starting_vals[3]
 
-        self.gprod_limit = (self.klambda * self.gb + self.gprod0 * (self.kphi + self.gb)) / (self.klambda + self.gprod0)
+        self.gprod_limit = (self.klambda * self.gb + self.gprod0 * (self.kmu + self.gb)) / (self.klambda + self.gprod0)
 
 
     def update(self, t):
@@ -47,7 +47,6 @@ class Model:
         phi = 0 if t < self.tau else self.history[t - self.tau][j_label]
         new_l = old_l + (phi * self.kjl) - (old_l * self.kgl)
 
-        # g_prod = self.klambda / ((self.klambda / self.gprod0) + (old_g - self.gb))
         g_prod = (self.klambda * (self.gb - old_g))/(self.kmu + (self.gb - old_g)) + self.gprod0 if old_g <= self.gprod_limit else 0
         new_g = old_g - (self.kxg + self.kxgi * old_i) * old_g + g_prod + self.eta * (self.kgj * old_j + self.kgl * old_l)
         

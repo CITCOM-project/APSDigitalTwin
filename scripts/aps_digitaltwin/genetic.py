@@ -13,7 +13,7 @@ class GlucoseInsulinGeneticAlgorithm:
 
         self.training_data = None
 
-    def run(self, training_data):
+    def run(self, training_data, plot_model = False):
         self.training_data = training_data
 
         ga_stomach_instance = pygad.GA(num_generations=1000,
@@ -55,12 +55,15 @@ class GlucoseInsulinGeneticAlgorithm:
         self.__kxi = insulin_solution[0]
 
         ga_instance = pygad.GA(num_generations=1500,
-                       num_parents_mating=8,
-                       fitness_func=self.wrapped_fitness_function_glucose(),
-                       sol_per_pop=30,
                        num_genes=10,
+                       sol_per_pop=30,
+                       fitness_func=self.wrapped_fitness_function_glucose(),
+                       num_parents_mating=4,
+                       parent_selection_type="tournament",
+                       K_tournament=4,
                        mutation_type="random",
-                       mutation_percent_genes=30,
+                       mutation_percent_genes=20,
+                       mutation_by_replacement=True,
                        gene_space=[
                         {"low": 0, "high": 1},
                         {"low": 0, "high": 1},
@@ -108,20 +111,21 @@ class GlucoseInsulinGeneticAlgorithm:
 
         print(f"Best constants = [{', '.join(map(str, best_constants))}]")
 
-        model = Model(self.training_data.find_initial_values(), best_constants)
+        if plot_model:
+            model = Model(self.training_data.find_initial_values(), best_constants)
 
-        for intervention in self.training_data.interventions:
-            model.add_intervention(intervention[0], intervention[1], intervention[2])
+            for intervention in self.training_data.interventions:
+                model.add_intervention(intervention[0], intervention[1], intervention[2])
 
-        try:
-            for i in range(1, (self.training_data.timesteps - 1) * 5 + 1):
-                model.update(i)
-        except:
-            raise Exception("Model learning failed")
-        
-        model.plot()
+            try:
+                for i in range(1, (self.training_data.timesteps - 1) * 5 + 1):
+                    model.update(i)
+            except:
+                raise Exception("Model learning failed")
+            
+            model.plot()
 
-        return best_constants
+        return best_constants, final_solution_fitness
 
     def wrapped_fitness_function_stomach(self):
 
@@ -204,7 +208,7 @@ class GlucoseInsulinGeneticAlgorithm:
                 return 0
 
             np_bg_model = np.array(pd.DataFrame(model.history)[g_label])
-            np_bg_training = np.array(self.training_data.iob_data_frame)
+            np_bg_training = np.array(self.training_data.bg_data_frame)
 
             spline_factor = 0.1
             error = np.sum(np.square(np_bg_model - np_bg_training))

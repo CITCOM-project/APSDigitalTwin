@@ -8,8 +8,8 @@ i_label = 'Blood Insulin'
 
 class TrainingData:
 
-    def __init__(self, data_path) -> None:
-        self.timesteps = 25
+    def __init__(self, data_path, timesteps = 24) -> None:
+        self.timesteps = timesteps
         self.counter = 0
         
         data_frame = pd.read_csv(data_path)[:self.timesteps]
@@ -31,12 +31,13 @@ class TrainingData:
 
         rates_dataframe = data_frame["rate"]
         for i, rate in rates_dataframe.iteritems():
-            interventions.append((i * 5, i_label, 1000 * rate / 60.0))
+            for j in range(5):
+                interventions.append((i * 5 + j, i_label, (1000 * rate / 60.0) / 5.0))
 
         for i in range(len(self.cob_data_frame) - 1):
             diff = self.cob_data_frame[i + 1] - self.cob_data_frame[i]
             if diff > 0:
-                interventions.append(((i + 1) * 5, s_label, diff))
+                interventions.append((i + 1, s_label, diff))
 
         return interventions
     

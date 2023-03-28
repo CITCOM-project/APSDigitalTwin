@@ -8,11 +8,9 @@ if __name__ == "__main__":
 
     load_dotenv()
 
-    training_data = TrainingData("./data/data_1.csv")
-    ga = GlucoseInsulinGeneticAlgorithm()
-    constants, _f = ga.run(training_data, True)
-
-    # constants = [0.006099608383310695, 0.9480043796363652, 0.3658330385151397, 0.09029516786725544, 0.0016741618977367256, 0.00026132989388338856, 0.043580989667546755, 114, 0.9727020894984222, 0.780562469959468, 0.9902416909564876, 0.1588669031447998]
+    training_data_1 = TrainingData("./data/data_1.csv")
+    ga_1 = GlucoseInsulinGeneticAlgorithm()
+    constants, _f = ga_1.run(training_data_1)
 
     s1 = Scenario(30, 70, 20, 120, 180, 40, []) # Low Crashing
     s2 = Scenario(50, 70, 0, 120, 180, 40, []) # Low Stable
