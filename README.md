@@ -35,6 +35,15 @@ You may also update any scenarios as required. To then run the code:
 python ./scripts/main.py
 ```
 
+
+In `scripts/rq1_model_correctness.py` and `scripts/rq2_model_prediction.py`, figures are saved to the `figure_save_path` variable declared at the top of the file. 
+
+These scripts can be run with the following commands:
+```
+python scripts/rq1_model_correctness.py
+python scripts/rq2_model_prediction.py
+```
+
 ## Output
 
 After each scenario, the program will display two graphs representing the scenario with no OpenAPS intervention and the scenario with OpenAPS intervention every 5 minutes. Each scenario run will also return `True` or `False` depending if the scenario has less or more deviations outside of a safe blood glucose level.
