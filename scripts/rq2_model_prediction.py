@@ -11,10 +11,9 @@ if __name__ == "__main__":
     fitnesses = []
     labels = []
 
-    figure_save_path = "/home/richardsomers/Desktop"
+    figure_save_path = "<PATH>"
 
-    # for person in range(1,4):
-    for person in [2]:
+    for person in range(1,4):
         training_data = TrainingData(f"./data/data_{person}.csv")
         testing_data = TrainingData(f"./data/data_{person}_test.csv")
         np_bg_testing = np.array(testing_data.bg_data_frame)
@@ -49,11 +48,11 @@ if __name__ == "__main__":
         plt.savefig(f"{figure_save_path}/RQ2/Person_{person}")
         plt.clf()
 
-    # data = {"Person": labels, "Fitness": fitnesses}
+    data = {"Person": labels, "Fitness": fitnesses}
 
-    # df = pd.DataFrame(data=data)
-    # df.to_csv("rq2_fitnesses.csv")
-    # ax = df.plot.scatter(x="Person", y="Fitness", c="black", s=4)
-    # ax.set_title("Fitness Across Model Interpolation")
-    # ax.set_yscale("log")
-    # plt.savefig(f"{figure_save_path}/RQ2/Fitnesses")
+    df = pd.DataFrame(data=data)
+    df.to_csv("rq2_fitnesses.csv")
+    ax = df.plot.scatter(x="Person", y="Fitness", c="black", s=4)
+    ax.set_title("Fitness Across Model Interpolation")
+    ax.set_yscale("log")
+    plt.savefig(f"{figure_save_path}/RQ2/Fitnesses")
