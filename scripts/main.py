@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     load_dotenv()
 
-    training_data = TrainingData("./data/data_1.csv")
+    training_data = [TrainingData("./data/data_1.csv")]
     ga = GlucoseInsulinGeneticAlgorithm()
     constants, _f = ga.run(training_data, True)
 

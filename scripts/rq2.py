@@ -8,9 +8,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    fitnesses = []
-    labels = []
-
     figure_save_path = "/home/richardsomers/Desktop"
 
     for person in range(1,4):
@@ -21,19 +18,10 @@ if __name__ == "__main__":
             constants, _f = ga.run(training_data)
             training_model = Model(training_data[0].find_initial_values(), constants)
 
-            for intervention in training_data[0].interventions:
-                training_model.add_intervention(intervention[0], intervention[1], intervention[2])
-
             for i in range(1, (training_data[0].timesteps - 1) * 5 + 1):
                 training_model.update(i)
 
             np_bg_model = np.array(pd.DataFrame(training_model.history)[g_label])
-            training_error = np.sum(np.square(np_bg_model - np_bg_training))
-            training_fitness = 1/training_error
-
-            fitnesses.append(training_fitness)
-            labels.append(f"Person {person}")
-
             plt.plot(np.array(pd.DataFrame(training_model.history)["step"]), np_bg_model, 
                      c="black", linestyle="--", linewidth = 1, alpha = 0.1)
             
@@ -43,14 +31,5 @@ if __name__ == "__main__":
         plt.ylabel("Blood Glucose")
         plt.xlabel("Timestep")
         plt.title(f"Person {person} Model Outputs")
-        plt.savefig(f"{figure_save_path}/RQ1/Person_{person}")
+        plt.savefig(f"{figure_save_path}/RQ2/Person_{person}")
         plt.clf()
-        
-    data = {"Person": labels, "Fitness": fitnesses}
-
-    df = pd.DataFrame(data=data)
-    df.to_csv("rq1_fitnesses.csv")
-    ax = df.plot.scatter(x="Person", y="Fitness", c="black", s=4)
-    ax.set_title("Fitness Across Model Training")
-    ax.set_yscale("log")
-    plt.savefig(f"{figure_save_path}/RQ1/Fitnesses")

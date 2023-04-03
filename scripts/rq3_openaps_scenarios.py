@@ -1,35 +1,61 @@
 from aps_digitaltwin.genetic import GlucoseInsulinGeneticAlgorithm
-from aps_digitaltwin.util import TrainingData
-from aps_digitaltwin.scenario import Scenario
+from aps_digitaltwin.util import TrainingData, g_label, i_label
+from aps_digitaltwin.model import Model
+from aps_digitaltwin.openaps import OpenAPS
 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 
 if __name__ == "__main__":
 
     load_dotenv()
+    plt.clf()
 
-    training_data_1 = TrainingData("./data/data_1.csv")
-    ga_1 = GlucoseInsulinGeneticAlgorithm()
-    constants, _f = ga_1.run(training_data_1)
+    figure_save_path = "/home/richardsomers/Desktop"
 
-    s1 = Scenario(30, 70, 20, 120, 180, 40, []) # Low Crashing
-    s2 = Scenario(50, 70, 0, 120, 180, 40, []) # Low Stable
-    s3 = Scenario(200, 70, 0, 120, 180, 40, []) # Low Rising
+    training_data = [TrainingData(f"./data/data_1.csv")]
+    fig, (ax1, ax2) = plt.subplots(1,2, figsize=(10,5))
+    ax1.set_ylim(0, 200)
+    ax2.set_ylim(0, 200)
+    ax1.set_title("No Intervention")
+    ax2.set_title("OpenAPS Intervention")
+    ax1.set_xlabel("Timestep")
+    ax2.set_xlabel("Timestep")
+    ax1.set_ylabel("Blood Glucose")
+    ax2.set_ylabel("Blood Glucose")
 
-    s4 = Scenario(30, 100, 20, 120, 180, 40, []) # Normal Crashing
-    s5 = Scenario(50, 100, 0, 120, 180, 40, []) # Normal Stable
-    s6 = Scenario(200, 100, 0, 120, 180, 40, []) # Normal Rising
+    ga = GlucoseInsulinGeneticAlgorithm()
+    constants, _f = ga.run(training_data)
+    training_model = Model(training_data[0].find_initial_values(), constants)
 
-    s7 = Scenario(30, 130, 20, 120, 180, 40, []) # High Crashing
-    s8 = Scenario(50, 130, 0, 120, 180, 40, []) # High Stable
-    s9 = Scenario(200, 130, 0, 120, 180, 40, []) # High Rising
+    for i in range(1, (training_data[0].timesteps - 1) * 10 + 1):
+        training_model.update(i)
 
-    print(s1.run(constants))
-    print(s2.run(constants))
-    print(s3.run(constants))
-    print(s4.run(constants))
-    print(s5.run(constants))
-    print(s6.run(constants))
-    print(s7.run(constants))
-    print(s8.run(constants))
-    print(s9.run(constants))
+    np_bg_model = np.array(pd.DataFrame(training_model.history)[g_label])
+
+    ax1.plot(np.array(pd.DataFrame(training_model.history)["step"]), np_bg_model, 
+                c="black", linestyle="--", linewidth = 1, alpha = 1)
+
+    for profile, colour in [("./data/example_oref0_data/profiles/profile_80.json", "r"),
+                ("./data/example_oref0_data/profiles/profile_100.json", "b"),
+                ("./data/example_oref0_data/profiles/profile_120.json", "g")]:
+
+        open_aps = OpenAPS(profile_path=profile)
+        open_aps_model = Model(training_data[0].find_initial_values(), constants)
+
+        for i in range(1, (training_data[0].timesteps - 1) * 10 + 1):
+            if i % 5 == 1:
+                rate = open_aps.run(open_aps_model.history)
+                for j in range(5):
+                    open_aps_model.add_intervention(i + j, i_label, rate / 5.0)
+            open_aps_model.update(i)
+
+        np_bg_model = np.array(pd.DataFrame(open_aps_model.history)[g_label])
+
+        ax2.plot(np.array(pd.DataFrame(open_aps_model.history)["step"]), np_bg_model, 
+                c=colour, linestyle="--", linewidth = 1, alpha = 1)
+        
+    fig.savefig(f"{figure_save_path}/RQ3/Person_1")
+    plt.clf()

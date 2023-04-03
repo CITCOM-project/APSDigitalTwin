@@ -8,7 +8,7 @@ from aps_digitaltwin.util import g_label, s_label, i_label
 
 class OpenAPS:
 
-    def __init__(self, recorded_carbs, autosense_ratio = 1.0, test_timestamp = "2023-01-01T18:00:00-00:00") -> None:
+    def __init__(self, recorded_carbs = None, autosense_ratio = 1.0, test_timestamp = "2023-01-01T18:00:00-00:00", profile_path = None) -> None:
         self.shell = "Windows" in platform.system()
         oref_help = subprocess.check_output(["oref0", "--help"], shell=self.shell)
 
@@ -16,7 +16,10 @@ class OpenAPS:
             print("ERROR - oref0 not installed")
             exit(1)
 
-        self.profile_path = os.environ["profile_path"]
+        if profile_path == None:
+            self.profile_path = os.environ["profile_path"]
+        else:
+            self.profile_path = profile_path
         self.basal_profile_path = os.environ["basal_profile_path"]
         self.autosense_ratio = autosense_ratio
         self.test_timestamp = test_timestamp
@@ -130,7 +133,3 @@ class OpenAPS:
     def __make_file_and_write_to(self, file_path, contents):
         file = open(file_path, "w")
         file.write(contents)
-
-if __name__ == "__main__":
-    x = OpenAPS("./oref0_data/profile.json")
-    x.run()

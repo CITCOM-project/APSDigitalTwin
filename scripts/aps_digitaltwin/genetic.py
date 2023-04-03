@@ -2,6 +2,7 @@ import pygad
 import math
 import pandas as pd
 import numpy as np
+import warnings
 from aps_digitaltwin.model import Model
 from aps_digitaltwin.util import s_label, g_label, i_label
 
@@ -70,7 +71,7 @@ class GlucoseInsulinGeneticAlgorithm:
                         {"low": 0, "high": 1},
                         {"low": 0, "high": 1},
                         {"low": 0, "high": 1},
-                        {"low": 1, "high": self.training_data.timesteps * 5},
+                        {"low": 1, "high": self.training_data[0].timesteps * 5},
                         {"low": 0, "high": 1},
                         {"low": 0, "high": 1},
                         {"low": 0, "high": 1},
@@ -112,13 +113,13 @@ class GlucoseInsulinGeneticAlgorithm:
         print(f"Best constants = [{', '.join(map(str, best_constants))}]")
 
         if plot_model:
-            model = Model(self.training_data.find_initial_values(), best_constants)
+            model = Model(self.training_data[0].find_initial_values(), best_constants)
 
-            for intervention in self.training_data.interventions:
+            for intervention in self.training_data[0].interventions:
                 model.add_intervention(intervention[0], intervention[1], intervention[2])
 
             try:
-                for i in range(1, (self.training_data.timesteps - 1) * 5 + 1):
+                for i in range(1, (self.training_data[0].timesteps - 1) * 5 + 1):
                     model.update(i)
             except:
                 raise Exception("Model learning failed")
@@ -131,21 +132,23 @@ class GlucoseInsulinGeneticAlgorithm:
 
         def fitness_function_stomach(solution, solution_idx):
             constants = [solution[0],0.1,0.1,0.1,0.1,0.1,0.1,5,0.1,0.1,0.1,0.1]
+            error = 0
+            for dataset in self.training_data:
 
-            model = Model(self.training_data.find_initial_values(), constants)
+                model = Model(dataset.find_initial_values(), constants)
 
-            for intervention in self.training_data.interventions:
-                model.add_intervention(intervention[0], intervention[1], intervention[2])
+                for intervention in dataset.interventions:
+                    model.add_intervention(intervention[0], intervention[1], intervention[2])
 
-            try:
-                for i in range(1, (self.training_data.timesteps - 1) * 5 + 1):
-                    model.update(i)
-            except:
-                return 0
-            
-            np_stomach_model = np.array(pd.DataFrame(model.history)[s_label])
-            np_stomach_training = np.array(self.training_data.cob_data_frame)
-            error = np.sum(np.square(np_stomach_model - np_stomach_training))
+                try:
+                    for i in range(1, (dataset.timesteps - 1) * 5 + 1):
+                        model.update(i)
+                except:
+                    return 0
+                
+                np_stomach_model = np.array(pd.DataFrame(model.history)[s_label])
+                np_stomach_training = np.array(dataset.cob_data_frame)
+                error += np.sum(np.square(np_stomach_model - np_stomach_training))
 
             return 1/error
         
@@ -155,24 +158,22 @@ class GlucoseInsulinGeneticAlgorithm:
 
         def fitness_function_insulin(solution, solution_idx):
             constants = [self.__kjs,0.1,0.1,0.1,0.1,0.1,solution[0],5,0.1,0.1,0.1,0.1]
+            error = 0
+            for dataset in self.training_data:
+                model = Model(dataset.find_initial_values(), constants)
 
-            model = Model(self.training_data.find_initial_values(), constants)
+                for intervention in dataset.interventions:
+                    model.add_intervention(intervention[0], intervention[1], intervention[2])
 
-            for intervention in self.training_data.interventions:
-                model.add_intervention(intervention[0], intervention[1], intervention[2])
-
-            try:
-                for i in range(1, (self.training_data.timesteps - 1) * 5 + 1):
-                    model.update(i)
-            except:
-                return 0
-            
-            np_insulin_model = np.array(pd.DataFrame(model.history)[i_label])
-            np_insulin_training = np.array(self.training_data.iob_data_frame)
-
-            spline_factor = 0.01
-            error = np.sum(np.square(np_insulin_model - np_insulin_training))
-            error += np.sum(np.square(np.diff(np_insulin_model))) * spline_factor
+                try:
+                    for i in range(1, (dataset.timesteps - 1) * 5 + 1):
+                        model.update(i)
+                except:
+                    return 0
+                
+                np_insulin_model = np.array(pd.DataFrame(model.history)[i_label])
+                np_insulin_training = np.array(dataset.iob_data_frame)
+                error += np.sum(np.square(np_insulin_model - np_insulin_training))
 
             return 1/error
         
@@ -195,24 +196,28 @@ class GlucoseInsulinGeneticAlgorithm:
                 solution[8],
                 solution[9]
             ]
+            error = 0
+            for dataset in self.training_data:
+                model = Model(dataset.find_initial_values(), constants)
 
-            model = Model(self.training_data.find_initial_values(), constants)
+                for intervention in dataset.interventions:
+                    model.add_intervention(intervention[0], intervention[1], intervention[2])
 
-            for intervention in self.training_data.interventions:
-                model.add_intervention(intervention[0], intervention[1], intervention[2])
+                try:
+                    for i in range(1, (dataset.timesteps - 1) * 5 + 1):
+                        model.update(i)
+                except:
+                    return 0
 
-            try:
-                for i in range(1, (self.training_data.timesteps - 1) * 5 + 1):
-                    model.update(i)
-            except:
-                return 0
+                np_bg_model = np.array(pd.DataFrame(model.history)[g_label])
+                np_bg_training = np.array(dataset.bg_data_frame)
 
-            np_bg_model = np.array(pd.DataFrame(model.history)[g_label])
-            np_bg_training = np.array(self.training_data.bg_data_frame)
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore")
 
-            spline_factor = 0.1
-            error = np.sum(np.square(np_bg_model - np_bg_training))
-            error += np.sum(np.square(np.diff(np_bg_model))) * spline_factor
+                    spline_factor = 0.1
+                    error += np.sum(np.square(np_bg_model - np_bg_training))
+                    error += np.sum(np.square(np.diff(np_bg_model))) * spline_factor
 
             if math.isinf(error) or math.isnan(error):
                 return 0

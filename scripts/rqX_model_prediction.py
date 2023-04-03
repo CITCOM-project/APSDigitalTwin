@@ -11,7 +11,7 @@ if __name__ == "__main__":
     fitnesses = []
     labels = []
 
-    figure_save_path = "<PATH>"
+    figure_save_path = "/home/richardsomers/Desktop"
 
     for person in range(1,4):
         training_data = TrainingData(f"./data/data_{person}.csv")
