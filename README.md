@@ -28,22 +28,26 @@ This model requires a blood glucose (mmol/L), insulin on board (U), carbohydrate
 
 In `scripts/main.py`, modify `training_data` with a path your own training dataset. You should also update `.env` with the correct path for `profile_path` and `basal_profile_path`.
 
-For windows users, `COMSPEC` should also be updated to point to the exe of the bash command line which has oref0 installed (eg: `GitBash.exe`).
+For windows users, `COMSPEC` should also be updated to point to the exe of the bash command line which has oref0 installed (eg: `\User\GitBash.exe`).
 
 You may also update any scenarios as required. To then run the code:
 ```
 python ./scripts/main.py
 ```
 
+In each research question python file, the variable `figure_save_path` should be set to a path to save figures.
 
-In `scripts/rq1_model_correctness.py` and `scripts/rq2_model_prediction.py`, figures are saved to the `figure_save_path` variable declared at the top of the file. 
+To execute the research questions, run the following commands:
 
 These scripts can be run with the following commands:
 ```
 python scripts/rq1_model_correctness.py
-python scripts/rq2_model_prediction.py
+python scripts/rq2_person_glucose_dynamics.py
+python scripts/rq3_openaps_scenarios.py
 ```
 
 ## Output
 
-After each scenario, the program will display two graphs representing the scenario with no OpenAPS intervention and the scenario with OpenAPS intervention every 5 minutes. Each scenario run will also return `True` or `False` depending if the scenario has less or more deviations outside of a safe blood glucose level.
+For `main.py`, after each scenario, the program will display two graphs representing the scenario with no OpenAPS intervention and the scenario with OpenAPS intervention every 5 minutes. Each scenario run will also return `True` or `False` depending if the scenario has less or more deviations outside of a safe blood glucose level.
+
+For each research question script, figures wil be saved to the path represented by `figure_save_path`. Figures generated are specific to the research question in question.

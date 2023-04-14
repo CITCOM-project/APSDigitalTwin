@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    figure_save_path = "/home/richardsomers/Desktop"
+    figure_save_path = "<path>"
 
     for person in range(1,4):
         training_data = [TrainingData(f"./data/data_{person}.csv")]
