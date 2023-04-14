@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
 
-    training_data = TrainingData("./data/data.csv")
+    training_data = [TrainingData("./data/data_1.csv")]
     df = pd.DataFrame()
 
     iterations = 20
@@ -30,7 +30,7 @@ if __name__ == "__main__":
         ga = GlucoseInsulinGeneticAlgorithm()
         constants, fitness = ga.run(training_data)
         labels.append("Genetic Algorithm")
-        fitnesses.append(fitness)
+        fitnesses.append(1/fitness)
 
     data = {"Algorithm": labels, "Fitness": fitnesses}
 
@@ -38,4 +38,5 @@ if __name__ == "__main__":
     ax = df.plot.scatter(x="Algorithm", y="Fitness", c="black", s=4)
     ax.set_title("Fitness Across Fitting Algorithms")
     ax.set_yscale("log")
+    ax.set_ylim(top=0, bottom=10e-13)
     plt.show()

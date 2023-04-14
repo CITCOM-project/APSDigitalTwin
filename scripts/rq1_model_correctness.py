@@ -6,6 +6,7 @@ from aps_digitaltwin.util import s_label, j_label, l_label, g_label, i_label
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import math
 
 if __name__ == "__main__":
     fitnesses = []
@@ -28,10 +29,9 @@ if __name__ == "__main__":
                 training_model.update(i)
 
             np_bg_model = np.array(pd.DataFrame(training_model.history)[g_label])
-            training_error = np.sum(np.square(np_bg_model - np_bg_training))
-            training_fitness = 1/training_error
+            training_error = math.sqrt((1 / len(np_bg_model)) * np.sum(np.square(np_bg_model - np_bg_training)))
 
-            fitnesses.append(training_fitness)
+            fitnesses.append(training_error)
             labels.append(f"Person {person}")
 
             plt.plot(np.array(pd.DataFrame(training_model.history)["step"]), np_bg_model, 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     data = {"Person": labels, "Fitness": fitnesses}
 
     df = pd.DataFrame(data=data)
-    df.to_csv("rq1_fitnesses.csv")
+    df.to_csv("rq1_errors.csv")
     ax = df.plot.scatter(x="Person", y="Fitness", c="black", s=4)
     ax.set_title("Fitness Across Model Training")
     ax.set_yscale("log")

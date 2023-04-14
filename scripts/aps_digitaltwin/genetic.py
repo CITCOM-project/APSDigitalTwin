@@ -216,8 +216,8 @@ class GlucoseInsulinGeneticAlgorithm:
                     warnings.simplefilter("ignore")
 
                     spline_factor = 0.1
-                    error += np.sum(np.square(np_bg_model - np_bg_training))
-                    error += np.sum(np.square(np.diff(np_bg_model))) * spline_factor
+                    error += math.sqrt((1/len(np_bg_model)) * np.sum(np.square(np_bg_model - np_bg_training)))
+                    error += math.sqrt((1/len(np_bg_model)) * np.sum(np.square(np.diff(np_bg_model))) * spline_factor)
 
             if math.isinf(error) or math.isnan(error):
                 return 0

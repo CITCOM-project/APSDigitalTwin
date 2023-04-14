@@ -30,7 +30,7 @@ class TrainingData:
         interventions = []
 
         rates_dataframe = data_frame["rate"]
-        for i, rate in rates_dataframe.iteritems():
+        for i, rate in rates_dataframe.items():
             for j in range(5):
                 interventions.append((i * 5 + j, i_label, (1000 * rate / 60.0) / 5.0))
 
