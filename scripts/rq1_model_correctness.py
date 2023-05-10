@@ -19,7 +19,7 @@ if __name__ == "__main__":
         if data_trace.endswith(".csv"):
             training_data = TrainingData(os.path.join("./data", data_trace))
             np_bg_training = np.array(training_data.bg_data_frame)
-            for _i in range(20):
+            for _i in range(10):
                 ga = GlucoseInsulinGeneticAlgorithm()
                 constants, _f = ga.run(training_data)
                 training_model = Model(training_data.find_initial_values(), constants)
@@ -41,7 +41,7 @@ if __name__ == "__main__":
                 
             plt.plot(range((training_data.timesteps - 1) * 5 + 1), np_bg_training, 
                         c="red", linestyle="-", linewidth = 1, alpha = 1)
-            plt.ylim([0, 200])
+            plt.ylim([0, 300])
             plt.ylabel("Blood Glucose")
             plt.xlabel("Timestep")
             plt.title(f"Model output")
