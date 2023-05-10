@@ -162,4 +162,13 @@ for filename in os.listdir(dir_path):
 
 for output_file in os.listdir(output_dir):
     if output_file.endswith(".csv"):
+        file = open(os.path.join(output_dir, output_file))
+        content = file.read()
+        file.close()
+        if "nan" in content or "null" in content:
+            print(f"Removing {output_file[:-4]} - IC2")
+            os.remove(os.path.join(output_dir, output_file))
+
+for output_file in os.listdir(output_dir):
+    if output_file.endswith(".csv"):
         split_output(output_dir, output_file)

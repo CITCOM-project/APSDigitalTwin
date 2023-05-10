@@ -34,7 +34,7 @@ if __name__ == "__main__":
                 training_error = math.sqrt((1 / len(np_bg_model)) * np.sum(np.square(np_bg_model - np_bg_training)))
 
                 fitnesses.append(training_error)
-                labels.append(f"Person {data_trace}")
+                labels.append(f"Person {data_trace[:-4]}")
 
                 plt.plot(np.array(pd.DataFrame(training_model.history)["step"]), np_bg_model, 
                         c="black", linestyle="--", linewidth = 1, alpha = 0.1)
@@ -45,7 +45,7 @@ if __name__ == "__main__":
             plt.ylabel("Blood Glucose")
             plt.xlabel("Timestep")
             plt.title(f"Model output")
-            plt.savefig(f"{figure_save_path}/RQ1/Person_{data_trace}")
+            plt.savefig(f"{figure_save_path}/RQ1/{data_trace[:-4]}")
             plt.clf()
         
     data = {"Person": labels, "Error": fitnesses}
@@ -53,5 +53,4 @@ if __name__ == "__main__":
     df.to_csv("rq1_errors.csv")
     ax = df.plot.scatter(x="Person", y="Error", c="black", s=4)
     ax.set_title("Error Across Model Training")
-    ax.set_yscale("log")
     plt.savefig(f"{figure_save_path}/RQ1/Errors")
