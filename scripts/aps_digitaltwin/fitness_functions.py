@@ -10,22 +10,21 @@ def fitness_function_stomach(solutions, training_data):
         error = 0
         constants = [solution[0],0.1,0.1,0.1,0.1,0.1,0.1,5,0.1,0.1,0.1,0.1]
 
-        for training in training_data:
-            model = Model(training.find_initial_values(), constants)
+        model = Model(training_data.find_initial_values(), constants)
 
-            for intervention in training.interventions:
-                model.add_intervention(intervention[0], intervention[1], intervention[2])
+        for intervention in training_data.interventions:
+            model.add_intervention(intervention[0], intervention[1], intervention[2])
 
-            try:
-                for i in range(1, (training.timesteps - 1) * 5 + 1):
-                    model.update(i)
-            except:
-                error += 99999999
-                continue
-            
-            np_stomach_model = np.array(pd.DataFrame(model.history)[s_label])
-            np_stomach_training = np.array(training.cob_data_frame)
-            error += np.sum(np.square(np_stomach_model - np_stomach_training))
+        try:
+            for i in range(1, (training_data.timesteps - 1) * 5 + 1):
+                model.update(i)
+        except:
+            error += 99999999
+            continue
+        
+        np_stomach_model = np.array(pd.DataFrame(model.history)[s_label])
+        np_stomach_training = np.array(training_data.cob_data_frame)
+        error += np.sum(np.square(np_stomach_model - np_stomach_training))
 
         costs.append(error)
     
@@ -37,22 +36,21 @@ def fitness_function_insulin(solutions, training_data, kjs):
         error = 0
         constants = [kjs,0.1,0.1,0.1,0.1,0.1,solution[0],5,0.1,0.1,0.1,0.1]
 
-        for training in training_data:
-            model = Model(training.find_initial_values(), constants)
+        model = Model(training_data.find_initial_values(), constants)
 
-            for intervention in training.interventions:
-                model.add_intervention(intervention[0], intervention[1], intervention[2])
+        for intervention in training_data.interventions:
+            model.add_intervention(intervention[0], intervention[1], intervention[2])
 
-            try:
-                for i in range(1, (training.timesteps - 1) * 5 + 1):
-                    model.update(i)
-            except:
-                error += 999999
-                continue
-            
-            np_insulin_model = np.array(pd.DataFrame(model.history)[i_label])
-            np_insulin_training = np.array(training.iob_data_frame)
-            error += np.sum(np.square(np_insulin_model - np_insulin_training))
+        try:
+            for i in range(1, (training_data.timesteps - 1) * 5 + 1):
+                model.update(i)
+        except:
+            error += 999999
+            continue
+        
+        np_insulin_model = np.array(pd.DataFrame(model.history)[i_label])
+        np_insulin_training = np.array(training_data.iob_data_frame)
+        error += np.sum(np.square(np_insulin_model - np_insulin_training))
 
         costs.append(error)
 
@@ -77,25 +75,24 @@ def fitness_function_glucose(solutions, training_data, kjs, kxi):
             solution[9]
         ]
 
-        for training in training_data:
-            model = Model(training.find_initial_values(), constants)
+        model = Model(training_data.find_initial_values(), constants)
 
-            for intervention in training.interventions:
-                model.add_intervention(intervention[0], intervention[1], intervention[2])
+        for intervention in training_data.interventions:
+            model.add_intervention(intervention[0], intervention[1], intervention[2])
 
-            try:
-                for i in range(1, (training.timesteps - 1) * 5 + 1):
-                    model.update(i)
-            except:
-                error += 99999
-                continue
+        try:
+            for i in range(1, (training_data.timesteps - 1) * 5 + 1):
+                model.update(i)
+        except:
+            error += 99999
+            continue
 
-            np_bg_model = np.array(pd.DataFrame(model.history)[g_label])
-            np_bg_training = np.array(training.bg_data_frame)
+        np_bg_model = np.array(pd.DataFrame(model.history)[g_label])
+        np_bg_training = np.array(training_data.bg_data_frame)
 
-            spline_factor = 0.01
-            error += math.sqrt((1/len(np_bg_model)) * np.sum(np.square(np_bg_model - np_bg_training)))
-            error += math.sqrt((1/len(np_bg_model)) * np.sum(np.square(np.diff(np_bg_model))) * spline_factor)
+        spline_factor = 0.01
+        error += math.sqrt((1/len(np_bg_model)) * np.sum(np.square(np_bg_model - np_bg_training)))
+        error += math.sqrt((1/len(np_bg_model)) * np.sum(np.square(np.diff(np_bg_model))) * spline_factor)
 
         if math.isinf(error) or math.isnan(error):
             costs.append(99999)
