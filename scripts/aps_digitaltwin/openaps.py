@@ -27,9 +27,12 @@ class OpenAPS:
         self.pump_history = []
         self.recorded_carbs = recorded_carbs
 
-    def run(self, model_history):
-        if not os.path.exists('./openaps_temp'):
-            os.mkdir("./openaps_temp")
+    def run(self, model_history, output_file = None):
+        if output_file == None:
+            output_file = './openaps_temp'
+        
+        if not os.path.exists(output_file):
+            os.mkdir(output_file)
 
         time_since_start = len(model_history) - 1
         current_epoch = self.epoch_time + 60000 * time_since_start
@@ -74,50 +77,50 @@ class OpenAPS:
         glucose_history.reverse()
         carb_history.reverse()
 
-        self.__make_file_and_write_to("./openaps_temp/clock.json", f'"{current_timestamp}-00:00"')
-        self.__make_file_and_write_to("./openaps_temp/autosens.json", '{"ratio":' + str(self.autosense_ratio) + '}')
-        self.__make_file_and_write_to("./openaps_temp/pumphistory.json", "[" + ','.join(basal_history) + "]")
-        self.__make_file_and_write_to("./openaps_temp/glucose.json", "[" + ','.join(glucose_history) + "]")
-        self.__make_file_and_write_to("./openaps_temp/carbhistory.json", "[" + ','.join(carb_history) + "]")
-        self.__make_file_and_write_to("./openaps_temp/temp_basal.json", temp_basal)
+        self.__make_file_and_write_to(f"{output_file}/clock.json", f'"{current_timestamp}-00:00"')
+        self.__make_file_and_write_to(f"{output_file}/autosens.json", '{"ratio":' + str(self.autosense_ratio) + '}')
+        self.__make_file_and_write_to(f"{output_file}/pumphistory.json", "[" + ','.join(basal_history) + "]")
+        self.__make_file_and_write_to(f"{output_file}/glucose.json", "[" + ','.join(glucose_history) + "]")
+        self.__make_file_and_write_to(f"{output_file}/carbhistory.json", "[" + ','.join(carb_history) + "]")
+        self.__make_file_and_write_to(f"{output_file}/temp_basal.json", temp_basal)
 
         iob_output = subprocess.check_output([
             "oref0-calculate-iob",
-            "./openaps_temp/pumphistory.json",
+            f"{output_file}/pumphistory.json",
             self.profile_path,
-            "./openaps_temp/clock.json",
-            "./openaps_temp/autosens.json"
+            f"{output_file}/clock.json",
+            f"{output_file}/autosens.json"
         ], shell=self.shell).decode("utf-8")
-        self.__make_file_and_write_to("./openaps_temp/iob.json", iob_output)
+        self.__make_file_and_write_to(f"{output_file}/iob.json", iob_output)
 
         meal_output = subprocess.check_output([
             "oref0-meal",
-            "./openaps_temp/pumphistory.json",
+            f"{output_file}/pumphistory.json",
             self.profile_path,
-            "./openaps_temp/clock.json",
-            "./openaps_temp/glucose.json",
+            f"{output_file}/clock.json",
+            f"{output_file}/glucose.json",
             self.basal_profile_path,
-            "./openaps_temp/carbhistory.json"
+            f"{output_file}/carbhistory.json"
         ], shell=self.shell).decode("utf-8")
-        self.__make_file_and_write_to("./openaps_temp/meal.json", meal_output)
+        self.__make_file_and_write_to(f"{output_file}/meal.json", meal_output)
 
         suggested_output = subprocess.check_output([
             "oref0-determine-basal",
-            "./openaps_temp/iob.json",
-            "./openaps_temp/temp_basal.json",
-            "./openaps_temp/glucose.json",
+            f"{output_file}/iob.json",
+            f"{output_file}/temp_basal.json",
+            f"{output_file}/glucose.json",
             self.profile_path,
             "--auto-sens",
-            "./openaps_temp/autosens.json",
+            f"{output_file}/autosens.json",
             "--meal",
-            "./openaps_temp/meal.json",
+            f"{output_file}/meal.json",
             "--microbolus",
             "--currentTime",
             str(current_epoch)
         ], shell=self.shell).decode("utf-8")
-        self.__make_file_and_write_to("./openaps_temp/suggested.json", suggested_output)
+        self.__make_file_and_write_to(f"{output_file}/suggested.json", suggested_output)
 
-        json_output = open("./openaps_temp/suggested.json")
+        json_output = open(f"{output_file}/suggested.json")
         data = json.load(json_output)
 
         rate = data["rate"] if "rate" in data else 0
@@ -126,7 +129,7 @@ class OpenAPS:
             timestamp = data["deliverAt"]
             self.pump_history.append((rate, duration, timestamp))
 
-        shutil.rmtree("./openaps_temp", ignore_errors=True)
+        shutil.rmtree(output_file, ignore_errors=True)
 
         return 1000 * rate / 60.0
 

@@ -33,21 +33,21 @@
     "first": 1,
     "targets": [
       {
-        "max_bg": 80,
-        "min_bg": 80,
+        "max_bg": 140,
+        "min_bg": 140,
         "x": 0,
         "offset": 0,
-        "low": 80,
+        "low": 140,
         "start": "00:00:00",
-        "high": 80,
+        "high": 140,
         "i": 0
       }
     ],
     "user_preferred_units": "mg/dL",
     "units": "mg/dL"
   },
-  "max_bg": 80,
-  "min_bg": 80,
+  "max_bg": 140,
+  "min_bg": 140,
   "out_units": "mg/dL",
   "max_basal": 4,
   "min_5m_carbimpact": 8,
