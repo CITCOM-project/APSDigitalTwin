@@ -180,5 +180,11 @@ for output_file in os.listdir(output_dir):
         bg_array = np.array(df["bg"])
         greaters = (np.abs(np.diff(bg_array)) > 50).sum()
         if greaters > 0:
+            pass
             print(f"Removing {output_file[:-4]} - IC4")
             os.remove(os.path.join(output_dir, output_file))
+        else:
+            cob_array = np.array(df["cob"])
+            if cob_array[0] == cob_array[24]:
+                print(f"Removing {output_file[:-4]} - IC4")
+                os.remove(os.path.join(output_dir, output_file))
