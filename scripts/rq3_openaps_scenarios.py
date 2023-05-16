@@ -12,9 +12,11 @@ from dotenv import load_dotenv
 
 def process(data_trace):
     load_dotenv()
-    model_outputs = {"none": [], "100": [], "120": [], "140": []}
+    model_outputs = {"none": [], "0": [], "100": [], "120": [], "140": []}
 
     training_data = TrainingData(os.path.join("./data", data_trace))
+
+    model_outputs["none"].append(np.array(training_data.bg_data_frame))
 
     for _i in range(10):
         ga = GlucoseInsulinGeneticAlgorithm()
@@ -26,7 +28,7 @@ def process(data_trace):
 
         np_bg_model = np.array(pd.DataFrame(training_model.history)[g_label])
 
-        model_outputs["none"].append(np_bg_model)
+        model_outputs["0"].append(np_bg_model)
 
         for profile, name in [("./data/example_oref0_data/profiles/profile_140.json", "140"),
                                 ("./data/example_oref0_data/profiles/profile_100.json", "100"),
@@ -74,9 +76,12 @@ if __name__ == "__main__":
 
             for data_trace, model_outputs in resturnvals:
                 for outputs_none in model_outputs["none"]:
-                    plt.plot(range(len(outputs_none)), outputs_none, c="black", linestyle="--", linewidth = 1, alpha = 0.5)
-                    all_labels.append(f"{data_trace}_none")
+                    all_labels.append(f"{data_trace}_0")
                     all_tir.append(np.count_nonzero((outputs_none > 70) & (outputs_none < 180))/outputs_none.size)
+                for outputs_0 in model_outputs["0"]:
+                    plt.plot(range(len(outputs_0)), outputs_0, c="black", linestyle="--", linewidth = 1, alpha = 0.5)
+                    all_labels.append(f"{data_trace}_0")
+                    all_tir.append(np.count_nonzero((outputs_0 > 70) & (outputs_0 < 180))/outputs_0.size)
                 for outputs_140 in model_outputs["140"]:
                     plt.plot(range(len(outputs_140)), outputs_140, c="r", linestyle="--", linewidth = 1, alpha = 0.5)
                     all_labels.append(f"{data_trace}_140")
