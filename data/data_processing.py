@@ -4,6 +4,7 @@ import pandas as pd
 from datetime import datetime
 import time
 import math
+import numpy as np
 
 def process_devstat_contents(file_path):
     df = pd.read_csv(file_path)
@@ -172,3 +173,12 @@ for output_file in os.listdir(output_dir):
 for output_file in os.listdir(output_dir):
     if output_file.endswith(".csv"):
         split_output(output_dir, output_file)
+
+for output_file in os.listdir(output_dir):
+    if output_file.endswith(".csv"):
+        df = pd.read_csv(os.path.join(output_dir, output_file))
+        bg_array = np.array(df["bg"])
+        greaters = (np.abs(np.diff(bg_array)) > 50).sum()
+        if greaters > 0:
+            print(f"Removing {output_file[:-4]} - IC4")
+            os.remove(os.path.join(output_dir, output_file))
