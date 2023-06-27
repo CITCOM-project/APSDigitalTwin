@@ -159,7 +159,7 @@ for filename in os.listdir(dir_path):
                     if entries.endswith(".csv"):
                         process_entries_contents(os.path.join(intern, entries), interventions, person_output)
     else:
-        print(f"Rejecting {filename} - IC2")
+        print(f"Rejecting {filename} - Data selection procedure (2)")
 
 for output_file in os.listdir(output_dir):
     if output_file.endswith(".csv"):
@@ -167,7 +167,7 @@ for output_file in os.listdir(output_dir):
         content = file.read()
         file.close()
         if "nan" in content or "null" in content:
-            print(f"Removing {output_file[:-4]} - IC2")
+            print(f"Removing {output_file[:-4]} - Data selection procedure (2)")
             os.remove(os.path.join(output_dir, output_file))
 
 for output_file in os.listdir(output_dir):
@@ -182,10 +182,10 @@ for output_file in os.listdir(split_dir):
         greaters = (np.abs(np.diff(bg_array)) > 50).sum()
         if greaters > 0:
             pass
-            print(f"Removing {output_file[:-4]} - IC4")
+            print(f"Removing {output_file[:-4]} - Data selection procedure (4)")
             os.remove(os.path.join(split_dir, output_file))
         else:
             cob_array = np.array(df["cob"])
             if cob_array[0] == cob_array[24]:
-                print(f"Removing {output_file[:-4]} - IC4")
+                print(f"Removing {output_file[:-4]} - Data selection procedure (4)")
                 os.remove(os.path.join(split_dir, output_file))
