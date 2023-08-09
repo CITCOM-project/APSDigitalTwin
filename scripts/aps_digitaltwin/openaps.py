@@ -48,7 +48,9 @@ class OpenAPS:
             basal_history.append(f'{{"timestamp":"{timestamp}","_type":"TempBasal","temp":"absolute","rate":{str(rate)}}}')
             basal_history.append(f'{{"timestamp":"{timestamp}","_type":"TempBasalDuration","duration (min)":{str(duration)}}}')
             if idx == len(self.pump_history) - 1:
-                temp_basal = f'{{"duration": {duration}, "temp": "absolute", "rate": {str(rate)}}}'
+                temp_basal_epoch = int(datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%fZ").timestamp() * 1000)
+                if (current_epoch - temp_basal_epoch) / 60 <= duration:
+                    temp_basal = f'{{"duration": {duration}, "temp": "absolute", "rate": {str(rate)}}}'
         basal_history.reverse()
 
         glucose_history = []
@@ -90,7 +92,7 @@ class OpenAPS:
             self.profile_path,
             f"{output_file}/clock.json",
             f"{output_file}/autosens.json"
-        ], shell=self.shell).decode("utf-8")
+        ], shell=self.shell, stderr=subprocess.DEVNULL).decode("utf-8")
         self.__make_file_and_write_to(f"{output_file}/iob.json", iob_output)
 
         meal_output = subprocess.check_output([
@@ -101,7 +103,7 @@ class OpenAPS:
             f"{output_file}/glucose.json",
             self.basal_profile_path,
             f"{output_file}/carbhistory.json"
-        ], shell=self.shell).decode("utf-8")
+        ], shell=self.shell, stderr=subprocess.DEVNULL).decode("utf-8")
         self.__make_file_and_write_to(f"{output_file}/meal.json", meal_output)
 
         suggested_output = subprocess.check_output([
@@ -117,8 +119,10 @@ class OpenAPS:
             "--microbolus",
             "--currentTime",
             str(current_epoch)
-        ], shell=self.shell).decode("utf-8")
+        ], shell=self.shell, stderr=subprocess.DEVNULL).decode("utf-8")
         self.__make_file_and_write_to(f"{output_file}/suggested.json", suggested_output)
+
+        self.__update_suggested(suggested_output, "./suggested_list.json")
 
         json_output = open(f"{output_file}/suggested.json")
         data = json.load(json_output)
@@ -136,3 +140,17 @@ class OpenAPS:
     def __make_file_and_write_to(self, file_path, contents):
         file = open(file_path, "w")
         file.write(contents)
+
+    def __update_suggested(self, suggested_json, file_path):
+        if not os.path.isfile(file_path):
+            new_file = open(file_path, "w")
+            new_file.write("[]")
+            new_file.close()
+
+        list_json = None
+        with open(file_path) as output_file:
+            list_json = json.load(output_file)
+            list_json.append(json.loads(suggested_json))
+
+        with open(file_path, 'w') as writing_json:
+            json.dump(list_json, writing_json, indent=4, separators=(',',': '))
