@@ -75,23 +75,29 @@ if __name__ == "__main__":
             resturnvals = pool.map(process, pool_vals)
 
             for data_trace, model_outputs in resturnvals:
+                df_dict = dict()
+
                 for outputs_none in model_outputs["none"]:
-                    all_labels.append(f"{data_trace}_0")
+                    all_labels.append(f"{data_trace}_none")
                     all_tir.append(np.count_nonzero((outputs_none > 70) & (outputs_none < 180))/outputs_none.size)
-                for outputs_0 in model_outputs["0"]:
+                for idx, outputs_0 in enumerate(model_outputs["0"]):
                     plt.plot(range(len(outputs_0)), outputs_0, c="black", linestyle="--", linewidth = 1, alpha = 0.5)
+                    df_dict[f"outputs_0_{idx}"] = outputs_0
                     all_labels.append(f"{data_trace}_0")
                     all_tir.append(np.count_nonzero((outputs_0 > 70) & (outputs_0 < 180))/outputs_0.size)
-                for outputs_140 in model_outputs["140"]:
+                for idx, outputs_140 in enumerate(model_outputs["140"]):
                     plt.plot(range(len(outputs_140)), outputs_140, c="r", linestyle="--", linewidth = 1, alpha = 0.5)
+                    df_dict[f"outputs_140_{idx}"] = outputs_140
                     all_labels.append(f"{data_trace}_140")
                     all_tir.append(np.count_nonzero((outputs_140 > 70) & (outputs_140 < 180))/outputs_140.size)
-                for outputs_100 in model_outputs["100"]:
+                for idx, outputs_100 in enumerate(model_outputs["100"]):
                     plt.plot(range(len(outputs_100)), outputs_100, c="b", linestyle="--", linewidth = 1, alpha = 0.5)
+                    df_dict[f"outputs_100_{idx}"] = outputs_100
                     all_labels.append(f"{data_trace}_100")
                     all_tir.append(np.count_nonzero((outputs_100 > 70) & (outputs_100 < 180))/outputs_100.size)
-                for outputs_120 in model_outputs["120"]:
+                for idx, outputs_120 in enumerate(model_outputs["120"]):
                     plt.plot(range(len(outputs_120)), outputs_120, c="g", linestyle="--", linewidth = 1, alpha = 0.5)
+                    df_dict[f"outputs_120_{idx}"] = outputs_120
                     all_labels.append(f"{data_trace}_120")
                     all_tir.append(np.count_nonzero((outputs_120 > 70) & (outputs_120 < 180))/outputs_120.size)
                 plt.ylim([0, 300])
@@ -101,9 +107,9 @@ if __name__ == "__main__":
                 plt.savefig(f"{figure_output}/RQ3/{data_trace}")
                 plt.clf()
 
+                df = pd.DataFrame(df_dict)
+                df.to_csv(f"{figure_output}/RQ3/{data_trace}.csv")
+
     data = {"Person": all_labels, "TIR": all_tir}
     df = pd.DataFrame(data=data)
-    df.to_csv("rq3_tir.csv")
-    ax = df.plot.scatter(x="Person", y="TIR", c="black", s=4)
-    ax.set_title("Error Across Model Training")
-    plt.savefig(f"{figure_output}/RQ3/TIR")
+    df.to_csv(f"{figure_output}/RQ3/rq3_tir.csv")

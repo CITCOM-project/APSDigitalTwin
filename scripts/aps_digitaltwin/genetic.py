@@ -113,7 +113,7 @@ class GlucoseInsulinGeneticAlgorithm:
         print(f"Best constants = [{', '.join(map(str, best_constants))}]")
 
         if plot_model:
-            model = Model(self.training_data[0].find_initial_values(), best_constants)
+            model = Model(self.training_data.find_initial_values(), best_constants)
 
             for intervention in self.training_data.interventions:
                 model.add_intervention(intervention[0], intervention[1], intervention[2])
