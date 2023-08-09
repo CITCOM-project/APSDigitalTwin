@@ -82,4 +82,4 @@ class Scenario:
 
             output.write(','.join(map(str,line)) + "\n")
 
-        return len(control_violations) <= len(hyper_violations + hypo_violations)
+        return len(control_violations) >= len(hyper_violations + hypo_violations)
