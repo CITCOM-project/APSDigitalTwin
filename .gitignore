@@ -2,4 +2,12 @@
 __pycache__
 *.csv
 *.log
+*.zip
+tmp/
 openaps_temp
+test/
+*.pdf
+find_faults.sh
+
+successful_attacks.json
+naughty_strings.txt

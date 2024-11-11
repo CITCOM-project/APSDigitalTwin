@@ -10,10 +10,20 @@ This system requires OpenAPS oref0 to be installed on the commandline. Please ch
 
 Install a conda environment for APSDigitalTwin:
 ```
-conda create --force -n aps-digital-twin
+conda create --force -n aps-digital-twin python=3.9
 conda activate aps-digital-twin
 pip install -r requirements.txt
 ```
+
+## Pre-Commit Hooks
+We have pre-commit hooks set up to ensure that we don't accidentally commit a file containing a patient id.
+The "naughty strings" come from the `constants` directory, so this needs to exist.
+Constants are stored in the format `patientID_inx.txt`, where `patientID` is a numerical string representing the openHumans patient ID and `inx` is the index of the trace segment from which the constants were inferred.
+For file `constants/patientID_inx.txt`, you are not allowed to commit any file whose name or body contains the string `patientID`.
+
+**CAUTION:** We do not check binary files or compressed folders, so, e.g. .xlsx files would not be checked.
+Commit these files at your own risk.
+
 ## Data Preparation
 
 This model requires a blood glucose (mmol/L), insulin on board (U), carbohydrates on board (g) and pump output rate (U/h) timeseries at 5 minute intervals to learn the model. This data should be presented in a csv with the following layout:

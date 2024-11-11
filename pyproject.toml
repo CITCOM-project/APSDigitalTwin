@@ -11,7 +11,7 @@ dependencies = [
     "pandas~=1.3.5",
     "pygad~=2.18.1",
     "pyswarms~=1.3.0",
-    "python-dotenv~=1.0.0"
+    "python-dotenv~=1.0.0",
 ]
 
 [build-system]
