@@ -10,6 +10,8 @@ repos:
    hooks:
     -   id: prevent_patient_ids
         name: prevent_patient_ids
-        language: python
-        entry: prevent_patient_ids
-        types: [python]
+        language: system
+        entry: python prevent_patient_ids.py
+        always_run: true
+        files: ".*"
+        verbose: true
