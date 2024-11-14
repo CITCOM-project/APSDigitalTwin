@@ -77,9 +77,10 @@ if __name__ == "__main__":
     print(np.average(data["Model Execution"]))
     print(np.average(data["oref0 Execution"]))
 
-    plt.boxplot(data, showfliers=False, labels=["Fitting", "Model Execution", "oref0 Execution"])
-    plt.ylabel("time (s)")
+    plt.boxplot(data, showfliers=False, labels=["Fitting Execution", "Model Execution", "oref0 Execution"])
+    plt.ylabel("Time (s)", fontsize=12)
     plt.title("Temporal Analysis")
+    plt.gca().tick_params(axis='x', labelsize=12)
     plt.tight_layout()
     plt.savefig(os.path.join(figure_output, "RQ3.1.png"))
     plt.show()
