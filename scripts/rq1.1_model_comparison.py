@@ -10,9 +10,16 @@ import matplotlib.pyplot as plt
 import math
 import os
 import multiprocessing as mp
+from scipy import stats
 
 from gplearn.genetic import SymbolicRegressor
 from sklearn.neural_network import MLPRegressor
+
+def cohen_d(x,y):
+    nx = len(x)
+    ny = len(y)
+    dof = nx + ny - 2
+    return (np.mean(x) - np.mean(y)) / np.sqrt(((nx-1)*np.std(x, ddof=1) ** 2 + (ny-1)*np.std(y, ddof=1) ** 2) / dof)
 
 def process(data_trace):
     
@@ -139,7 +146,45 @@ if __name__ == "__main__":
     data = pd.read_csv("comparison_data.csv").transpose()
     data.columns = ["Adapted Model", "Symbolic Regressor", "Neural Network"]
     plt.boxplot(data, showfliers=False, labels=["Adapted Model", "Symbolic Regressor", "Neural Network"])
-    plt.ylabel("RMSE")
+    plt.ylabel("RMSE", fontsize=12)
     plt.title("Model Comparison")
+    plt.gca().tick_params(axis='x', labelsize=11)
+    plt.gca().tick_params(axis='y', labelsize=11)
     plt.savefig(os.path.join(figure_output, "RQ1.1.png"))
     plt.show()
+
+    data_am = data["Adapted Model"]
+    data_sr = data["Symbolic Regressor"]
+    data_nn = data["Neural Network"]
+
+    data_am_r = [x for x in data["Adapted Model"] if x < 200]
+    data_sr_r = [x for x in data["Symbolic Regressor"] if x < 200]
+    data_nn_r = [x for x in data["Neural Network"] if x < 200]
+
+    print(np.mean(data_am))
+    print(np.mean(data_sr))
+    print(np.mean(data_nn))
+    print()
+    print(stats.shapiro(data_am).pvalue)
+    print(stats.shapiro(data_sr).pvalue)
+    print(stats.shapiro(data_nn).pvalue)
+    print()
+    print(stats.mannwhitneyu(data_am, data_sr).pvalue)
+    print(stats.mannwhitneyu(data_am, data_nn).pvalue)
+    print()
+    print(cohen_d(data_am, data_sr))
+    print(cohen_d(data_am, data_nn))
+    print()
+    print(np.mean(data_am_r))
+    print(np.mean(data_sr_r))
+    print(np.mean(data_nn_r))
+    print()
+    print(stats.shapiro(data_am_r).pvalue)
+    print(stats.shapiro(data_sr_r).pvalue)
+    print(stats.shapiro(data_nn_r).pvalue)
+    print()
+    print(stats.mannwhitneyu(data_am_r, data_sr_r).pvalue)
+    print(stats.mannwhitneyu(data_am_r, data_nn_r).pvalue)
+    print()
+    print(cohen_d(data_am_r, data_sr_r))
+    print(cohen_d(data_am_r, data_nn_r))
